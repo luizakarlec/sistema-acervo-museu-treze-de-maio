@@ -1,5 +1,5 @@
 # Trabalhos em Grupo
-Trabalhos desenvolvidos em grupo para o curso de Ciência da Computação da Universidade Franciscana
+Trabalhos desenvolvidos em grupo para o curso de Ciência da Computação da [Universidade Franciscana](https://site.ufn.edu.br/)
 
 ## Participantes
 * Éric Martins da Silva
