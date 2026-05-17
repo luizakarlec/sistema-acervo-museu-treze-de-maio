@@ -11,6 +11,4 @@ public class Localizacao {
 
     @Column(nullable = false)
     private String pais;
-
-
 }
