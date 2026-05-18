@@ -42,10 +42,6 @@ public class Revista {
 
     private byte[] capa;
 
-    private String tipo;
-
-    private String edicao;
-
     @ManyToOne
     @JoinColumn(name = "id_editora")
     private Editora editora;
