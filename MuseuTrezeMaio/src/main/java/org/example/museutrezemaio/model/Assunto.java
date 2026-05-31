@@ -13,7 +13,6 @@ public class Assunto{
     @Column(unique=true, nullable=false)
     private String descricao;
 
-    //@Column(nullable = false)
     private boolean ativo = true;
 
     public Assunto() {
