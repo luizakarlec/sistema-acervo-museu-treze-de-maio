@@ -27,25 +27,18 @@ public class EditoraController {
     /*esta testado se o dado é valido antes de tentar salva no banco de dados */
     @PostMapping("/salvarEditora")
     public String salvarEditora(@Validated @ModelAttribute Editora editora, BindingResult result) {
+        if (result.hasErrors()) {
+            return "editoraFormulario";
+        }
         try {
-            if (result.hasErrors()) {
-                return "editoraFormulario";
-            }
-
-            if (editoraService.existeNomeLocalizacao(editora.getNome(),editora.getLocalizacao().getCidade(),editora.getLocalizacao().getEstado() ,editora.getIdEditora())) {
-                result.reject(
-                        "editora.duplicada",
-                        "Já existe uma editora com esse nome e localização."
-                );
-                return "editoraFormulario";
-            }
             editoraService.salvar(editora);
-            return "redirect:/editora/editoraLista";
 
         } catch (IllegalArgumentException e) {
             result.reject("erro", e.getMessage());
             return "editoraFormulario";
         }
+        return "redirect:/editora/editoraLista";
+
     }
 
     @GetMapping("/editoraLista")
