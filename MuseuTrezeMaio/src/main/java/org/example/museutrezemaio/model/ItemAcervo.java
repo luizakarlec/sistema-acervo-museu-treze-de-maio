@@ -41,7 +41,7 @@
 ////    @JoinTable(
 ////            name = "Colaborador",
 ////            joinColumns = @JoinColumn(name = "id_itemAcervo"),
-////            inverseJoinColumns = @JoinColumn(name = "id_colaborador")
+////            inverseJoinColumns = @JoinColumn(name = "idColaborador")
 ////    )
 ////    private List<Colaborador> colaboradores = new ArrayList<>();
 ////

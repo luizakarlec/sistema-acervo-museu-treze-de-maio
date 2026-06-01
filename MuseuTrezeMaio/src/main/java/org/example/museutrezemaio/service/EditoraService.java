@@ -29,14 +29,13 @@ public class EditoraService {
                     "Informe pelo menos a cidade ou o estado.");
         }
 
-
+        if(editoraRepository.existsByNomeAndLocalizacaoCidadeAndLocalizacaoEstadoAndIdEditoraNot(editora.getNome(),cidade,estado,editora.getIdEditora())){
+            throw new IllegalArgumentException("Já existe uma editora cadastrada com esse nome e localização");
+        }
 
         editoraRepository.save(editora);
     }
 
-    public boolean existeNomeLocalizacao(String nome,String cidade, String estado, Integer idEditora){
-        return editoraRepository.existsByNomeAndLocalizacaoCidadeAndLocalizacaoEstadoAndIdEditoraNot(nome, cidade, estado,idEditora);
-    }
 
     public List<Editora>listaEditoras(){
         return editoraRepository.findAll();

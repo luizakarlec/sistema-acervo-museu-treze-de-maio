@@ -29,14 +29,17 @@ public class AssuntoController {
     /*esta testado se o dado é valido antes de tentar salva no banco de dados */
     @PostMapping("/salvarAssunto")
     public String salvarAssunto(@Validated @ModelAttribute Assunto assunto, BindingResult result) {
+        //validação dos campos obrigatórios
         if (result.hasErrors()) {
             return "assuntoFormulario";
         }
-        if (assuntoService.existeDescricaoId(assunto.getDescricao(),assunto.getIdAssunto())) {
-            result.rejectValue("descricao",null,"Já existe um assunto com essa descricao.");
+        try{
+            assuntoService.salvar(assunto);
+        }catch(IllegalArgumentException e){
+            result.rejectValue("descricao", "error.assunto", e.getMessage());
             return "assuntoFormulario";
         }
-        assuntoService.salvar(assunto);
+
         return "redirect:/assunto/assuntoLista";
     }
 

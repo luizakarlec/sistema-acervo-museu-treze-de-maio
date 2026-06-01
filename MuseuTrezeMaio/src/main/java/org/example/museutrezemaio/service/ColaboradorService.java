@@ -16,13 +16,11 @@ public class ColaboradorService {
     }
 
     public void salvar(Colaborador colaborador){
+        if(colaboradorRepository.existsByNomeAndSobrenomeAndTipoAndIdColaboradorNot(colaborador.getNome(),colaborador.getSobrenome(),colaborador.getTipo(),colaborador.getIdColaborador())){
+            throw new IllegalArgumentException("Já existe um colaborador cadastrado com este nome e sobrenome e tipo de colaboração");
+        }
         colaboradorRepository.save(colaborador);
     }
-
-    public boolean existeNomeSobrenomeTipo(String nome, String  sobrenome, String tipo, Integer idColaborador){
-        return colaboradorRepository.existsByNomeAndSobrenomeAndTipoAndIdColaboradorNot(nome, sobrenome, tipo, idColaborador);
-    }
-
 
     public List<Colaborador> listarColaboradores(){
         return colaboradorRepository.findAll();

@@ -16,12 +16,11 @@ public class AssuntoService {
         this.assuntoRepository = assuntoRepository;
     }
 
-    public void salvar(Assunto assunto){
+    public void salvar(Assunto assunto) {
+        if(assuntoRepository.existsByDescricaoAndIdAssuntoNot(assunto.getDescricao(), assunto.getIdAssunto())){
+             throw  new IllegalArgumentException ("Já existe um assunto cadastrado com esse descricao");
+        }
         assuntoRepository.save(assunto);
-    }
-
-    public boolean existeDescricaoId(String descricao, Integer id){
-        return assuntoRepository.existsByDescricaoAndIdAssuntoNot(descricao, id);
     }
 
     public List<Assunto> listarAssuntos(){
