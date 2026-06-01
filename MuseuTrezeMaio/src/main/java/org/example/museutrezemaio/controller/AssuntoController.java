@@ -40,7 +40,6 @@ public class AssuntoController {
             return "assuntoFormulario";
         }
 
-        assuntoService.salvar(assunto);
         return "redirect:/assunto/assuntoLista";
     }
 

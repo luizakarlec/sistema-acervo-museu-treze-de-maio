@@ -32,14 +32,14 @@ public class ColaboradorController {
         if (result.hasErrors()) {
             return "colaboradorFormulario";
         }
-        if (colaboradorService.existeNomeSobrenomeTipo(colaborador.getNome(),colaborador.getSobrenome(),colaborador.getTipo(),colaborador.getIdColaborador())) {
-            result.reject(
-                    "colaborador.duplicado",
-                    "Já existe um colaborador com esse nome, sobrenome e tipo."
-            );
+
+        try{
+            colaboradorService.salvar(colaborador);
+        }catch (IllegalArgumentException e){
+            result.reject("erro.global.colaborador",e.getMessage());
             return "colaboradorFormulario";
         }
-        colaboradorService.salvar(colaborador);
+
         return "redirect:/colaborador/colaboradorLista";
     }
 
