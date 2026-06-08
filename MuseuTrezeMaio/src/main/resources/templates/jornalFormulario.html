@@ -14,6 +14,7 @@
 
             <form method="POST" th:action="@{/jornal/salvarJornal}" th:object="${jornal}" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{idItemAcervo}">
+                <input type="hidden" th:field="*{tipo}">
 
                 <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
                     <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
@@ -26,7 +27,7 @@
                         <div class="text-danger small" th:if="${#fields.hasErrors('codigoJornal')}" th:errors="*{codigoJornal}"></div>
                     </div>
                     <div class="col-md-6">
-                        <label for="data" class="form-label">Data de Publicação</label>
+                        <label for="data" class="form-label">Data de Publicação *</label>
                         <input type="date" id="data" class="form-control" th:field="*{data}">
                         <div class="text-danger small" th:if="${#fields.hasErrors('data')}" th:errors="*{data}"></div>
                     </div>
@@ -45,9 +46,17 @@
                     </div>
                 </div>
 
+                <div class="col-md-12">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <textarea id="descricao" class="form-control" th:field="*{descricao}"
+                              rows="4" placeholder="Digite a descrição detalhada do item..."></textarea>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></div>
+                </div>
+                <br>
+
                 <div class="row mb-3">
                     <div class="col-md-4">
-                        <label for="edicao" class="form-label">Edição</label>
+                        <label for="edicao" class="form-label">Edição *</label>
                         <input type="text" id="edicao" class="form-control" th:field="*{edicao}">
                         <div class="text-danger small" th:if="${#fields.hasErrors('edicao')}" th:errors="*{edicao}"></div>
                     </div>
@@ -64,13 +73,8 @@
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="tipo" class="form-label">Tipo de Item *</label>
-                        <input type="text" id="tipo" class="form-control" th:field="*{tipo}" placeholder="Ex: Jornal Físico / Digital">
-                        <div class="text-danger small" th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}"></div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="localizacaoAcervo" class="form-label">Localização no Acervo (Prateleira/Corredor)</label>
+                    <div class="col-md-12">
+                        <label for="localizacaoAcervo" class="form-label">Localização no Acervo *</label>
                         <input type="text" id="localizacaoAcervo" class="form-control" th:field="*{localizacaoAcervo}">
                         <div class="text-danger small" th:if="${#fields.hasErrors('localizacaoAcervo')}" th:errors="*{localizacaoAcervo}"></div>
                     </div>
@@ -78,7 +82,7 @@
 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label for="editora" class="form-label">Editora *</label>
+                        <label for="editora" class="form-label">Editora</label>
                         <select id="editora" class="form-select" th:field="*{editora}">
                             <option value="">Selecione uma editora...</option>
                             <option th:each="ed : ${listaEditoras}"
@@ -102,14 +106,6 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <label for="status" class="form-label">Status de Conservação / Disponibilidade *</label>
-                        <input type="text" id="status" class="form-control" th:field="*{status}" placeholder="Ex: Disponível, Danificado, Restaurando">
-                        <div class="text-danger small" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
-                    </div>
-                </div>
-
                 <div class="row mb-4">
                     <div class="col-md-12">
                         <label for="fileCapa" class="form-label">Imagem da Capa (Opcional)</label>
@@ -117,12 +113,49 @@
                     </div>
                 </div>
 
+                <div class="col-md-12">
+                    <label for="notas" class="form-label">Notas</label>
+                    <textarea id="notas" class="form-control" th:field="*{notas}"
+                              rows="4" placeholder="Notas internas, estado de conservação específico, etc..."></textarea>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('notas')}" th:errors="*{notas}"></div>
+                </div>
+
                 <div class="mb-4">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="ativo" th:field="*{ativo}" checked>
-                        <label class="form-check-label" for="ativo">Registro Ativo</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="visibilidadeNotas" th:field="*{visibilidadeNotas}" checked>
+                        <label class="form-check-label" for="visibilidadeNotas">Visível para usuários</label>
                     </div>
                 </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label d-block">Status *</label>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="statusAtivo" th:field="*{status}" value="Ativo">
+                            <label class="form-check-label" for="statusAtivo">Ativo</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="statusInativo" th:field="*{status}" value="Inativo">
+                            <label class="form-check-label" for="statusInativo">Inativo</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="statusRestauracao" th:field="*{status}" value="Restauração">
+                            <label class="form-check-label" for="statusRestauracao">Restauração</label>
+                        </div>
+
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                    </div>
+                </div>
+
+<!--                <div class="mb-4">-->
+<!--                    <div class="form-check form-switch">-->
+<!--                        <input class="form-check-input" type="checkbox" role="switch" id="ativo" th:field="*{ativo}" checked>-->
+<!--                        <label class="form-check-label" for="ativo">Registro Ativo</label>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="row mt-4">
                     <div class="col text-start">
