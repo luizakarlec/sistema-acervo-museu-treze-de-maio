@@ -14,6 +14,17 @@
                 <!---<div th:if="${erro}" class="alert alert-danger">
                     <p th:text="${erro}"></p>
                 </div>-->
+
+                <form class="d-flex w-80 mb-3" role="search" th:action="@{/assunto/pesquisarAssunto}" method="GET">
+                    <div class="input-group">
+                        <input type="search" name="descricao" th:value="${descricaoPesquisada}" class="form-control" placeholder="Buscar por descrição" aria-label="Pesquisar">
+
+                        <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+                        <a th:if="${descricaoPesquisada != null and !descricaoPesquisada.isEmpty()}" th:href="@{/assunto/assuntoLista}" class="btn btn-outline-secondary">Limpar</a>
+                    </div>
+                </form>
+
+
                 <table class="table">
                     <tr>
                         <!---<th>Id</th>-->
