@@ -57,4 +57,15 @@ public class AssuntoController {
         return "assuntoFormulario";
     }
 
+    @GetMapping("/pesquisarAssunto")
+    public String pesquisarPorDescricao(@RequestParam(value = "descricao", required = false) String descricao, Model model) {
+        List<Assunto> listaFiltrada = assuntoService.buscarPorDescricao(descricao);
+
+        // Adiciona a lista e o termo pesquisado de volta para a tela
+        model.addAttribute("assuntos", listaFiltrada);
+        model.addAttribute("descricaoPesquisada", descricao);
+
+        return "assuntoLista";
+    }
+
 }

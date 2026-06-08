@@ -31,5 +31,11 @@ public class AssuntoService {
         return assuntoRepository.findById(id);
     }
 
+    public List<Assunto> buscarPorDescricao(String descricao) {
+        if (descricao == null || descricao.trim().isEmpty()) {
+            return assuntoRepository.findAll();
+        }
+        return assuntoRepository.findByDescricaoContainingIgnoreCase(descricao);
+    }
 
 }
