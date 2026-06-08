@@ -1,6 +1,7 @@
 package org.example.museutrezemaio.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +12,31 @@ public class ItemAcervo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int idItemAcervo;
 
+    @NotBlank(message = "O campo título é obrigatório")
     @Column(nullable = false)
     protected String titulo;
 
+    @NotBlank(message = "O campo status é obrigatório")
     @Column(nullable = false)
     protected String status;
 
+    @NotBlank(message = "O campo idioma é obrigatório")
     @Column(nullable = false)
     protected String idioma;
 
     @Column(nullable = false)
     protected String tipo;
 
+    protected String descricao;
+
+    protected String notas;
+
+    protected boolean visibilidadeNotas;
+
     protected String subtitulo;
 
+    @NotBlank(message = "O campo edição é obrigatório")
+    @Column(nullable = false)
     protected String edicao;
 
     protected int numeroPaginas;
@@ -135,6 +147,32 @@ public class ItemAcervo {
         this.assuntos = assuntos;
     }
 
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getNotas() {
+        return notas;
+    }
+
+    public void setNotas(String notas) {
+        this.notas = notas;
+    }
+
+    public boolean isVisibilidadeNotas() {
+        return visibilidadeNotas;
+    }
+
+    public void setVisibilidadeNotas(boolean visibilidadeNotas) {
+        this.visibilidadeNotas = visibilidadeNotas;
+    }
+
+    @NotBlank(message = "O campo localização no acervo é obrigatório")
+    @Column(nullable = false) //unique?
     protected String localizacaoAcervo;
 
     @ManyToOne
