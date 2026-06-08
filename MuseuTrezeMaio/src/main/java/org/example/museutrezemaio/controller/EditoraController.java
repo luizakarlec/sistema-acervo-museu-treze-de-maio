@@ -24,7 +24,7 @@ public class EditoraController {
         return "editoraFormulario";
     }
 
-    /*esta testado se o dado é valido antes de tentar salva no banco de dados */
+    /* esta testado se o dado é valido antes de tentar salva no banco de dados */
     @PostMapping("/salvarEditora")
     public String salvarEditora(@Validated @ModelAttribute Editora editora, BindingResult result) {
         if (result.hasErrors()) {
@@ -38,7 +38,6 @@ public class EditoraController {
             return "editoraFormulario";
         }
         return "redirect:/editora/editoraLista";
-
     }
 
     @GetMapping("/editoraLista")
