@@ -5,58 +5,276 @@
     <title>Lista de Jornais</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <style>
+        .card-jornal {
+            transition: box-shadow 0.2s ease;
+            height: 100%;
+        }
+        .card-jornal:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+        }
+        .card-jornal .card-img-top {
+            object-fit: cover;
+            height: 180px;
+            background-color: #f0f0f0;
+        }
+        .card-jornal .capa-placeholder {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e9ecef;
+            color: #adb5bd;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .card-jornal .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-jornal .card-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .badge-status {
+            font-size: 0.75rem;
+        }
+        #sem-resultados {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-4">
     <div class="row me-0">
-        <div class="col-md-10 bg-light p-3 rounded shadow-sm">
-            <h1>Lista de Jornais</h1>
+        <div class="col-md-11 bg-light p-4 rounded shadow-sm">
 
-            <table class="table table-striped align-middle">
-                <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Título</th>
-                    <th>Data</th>
-                    <th>Editora</th>
-                    <th>Situação</th>
-                    <th>Editar</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="jornal : ${jornais}">
-                    <td th:text="${jornal.codigoJornal}"></td>
+            <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                <h1 class="mb-0 h3">Lista de Jornais</h1>
+                <a type="button" th:href="@{/jornal/jornalFormulario}" class="btn btn-success">
+                    + Novo Jornal
+                </a>
+            </div>
 
-                    <td th:text="${jornal.titulo}"></td>
+            <!-- Barra de pesquisa -->
+            <div class="mb-4">
+                <input
+                        type="text"
+                        id="campoPesquisa"
+                        class="form-control"
+                        placeholder="Pesquisar por título, código ou editora..."
+                        oninput="filtrarJornais()"
+                >
+            </div>
 
-                    <td th:text="${#dates.format(jornal.data, 'dd/MM/yyyy')}"></td>
+            <!-- Info de resultados -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted" id="infoResultados"></small>
+            </div>
 
-                    <td th:text="${jornal.editora != null ? jornal.editora.nome : 'Sem Editora'}"></td>
+            <!-- Grid de cards -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3" id="gridJornais">
 
-                    <td>
-                        <span th:if="${jornal.ativo}" class="badge bg-success">Ativo</span>
-                        <span th:unless="${jornal.ativo}" class="badge bg-danger">Inativo</span>
-                    </td>
+                <!-- Thymeleaf: iterar jornais -->
+                <div class="col card-item"
+                     th:each="jornal : ${jornais}"
+                     th:data-titulo="${jornal.titulo}"
+                     th:data-codigo="${jornal.codigoJornal}"
+                     th:data-editora="${jornal.editora != null ? jornal.editora.nome : ''}">
 
-                    <td>
-                        <a type="button" th:href="@{/jornal/editar/{id}(id=${jornal.idItemAcervo})}"
-                           class="btn btn-warning btn-sm">Editar
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                    <div class="card card-jornal shadow-sm">
 
-            <div class="row mt-4 align-items-center">
-                <div class="col text-start">
-                    <a type="button" th:href="@{/#}" class="btn btn-primary">Voltar para a tela de início</a>
+                        <!-- Capa do jornal -->
+                        <th:block th:if="${jornal.capa != null}">
+                            <img th:src="@{/jornal/capa/{id}(id=${jornal.idItemAcervo})}"
+                                 class="card-img-top"
+                                 th:alt="${jornal.titulo}">
+                        </th:block>
+                        <th:block th:unless="${jornal.capa != null}">
+                            <div class="capa-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-newspaper" viewBox="0 0 16 16">
+                                    <path d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.5A1.5 1.5 0 0 1 0 13.028V2.5zm1 10.528c0 .27.187.5.5.5h11c.7 0 1-.5 1-1V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v10.528z"/>
+                                    <path d="M2 3h4v4H2V3zm1 1v2h2V4H3zM2 8h4v1H2V8zm0 2h4v1H2v-1zm0 2h4v1H2v-1zm5-8h4v1H7V4zm0 2h4v1H7V6zm0 2h4v1H7V8zm0 2h4v1H7v-1zm0 2h4v1H7v-1z"/>
+                                </svg>
+                                <span style="font-size:0.78rem;">Sem imagem</span>
+                            </div>
+                        </th:block>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="card-title mb-0" th:text="${jornal.titulo}" th:title="${jornal.titulo}">Título</h6>
+                                <span th:if="${jornal.ativo}" class="badge bg-success badge-status ms-1 flex-shrink-0">Ativo</span>
+                                <span th:unless="${jornal.ativo}" class="badge bg-danger badge-status ms-1 flex-shrink-0">Inativo</span>
+                            </div>
+
+                            <p class="card-text mb-1">
+                                <span class="fw-semibold text-dark" style="font-size:0.82rem;" th:text="${jornal.codigoJornal}">Código</span>
+                            </p>
+
+                            <p class="card-text mb-1" th:if="${jornal.data != null}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-calendar3 me-1" viewBox="0 0 16 16">
+                                    <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+                                    <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                </svg>
+                                <span th:text="${#dates.format(jornal.data, 'dd/MM/yyyy')}">Data</span>
+                            </p>
+
+                            <p class="card-text mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-building me-1" viewBox="0 0 16 16">
+                                    <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+                                    <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1z"/>
+                                </svg>
+                                <span th:text="${jornal.editora != null ? jornal.editora.nome : 'Sem Editora'}">Editora</span>
+                            </p>
+
+                            <div class="mt-auto">
+                                <a th:href="@{/jornal/detalhes/{id}(id=${jornal.idItemAcervo})}"
+                                   class="btn btn-outline-primary btn-sm w-100">Ver detalhes</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col text-center">
-                    <a type="button" th:href="@{/jornal/jornalFormulario}" class="btn btn-success">Novo Jornal</a>
+                <!-- /Thymeleaf -->
+
+            </div>
+
+            <!-- Sem resultados -->
+            <div id="sem-resultados" class="text-center py-5 text-muted">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-search mb-3" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.44 1.406a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+                </svg>
+                <p>Nenhum jornal encontrado para "<span id="termoPesquisado"></span>".</p>
+            </div>
+
+            <!-- Paginação -->
+            <nav class="mt-4" aria-label="Paginação de jornais">
+                <ul class="pagination justify-content-center" id="paginacao"></ul>
+            </nav>
+
+            <!-- Rodapé -->
+            <div class="row mt-3 align-items-center">
+                <div class="col text-start">
+                    <a type="button" th:href="@{/#}" class="btn btn-primary">Voltar para o início</a>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+
+<script>
+    const POR_PAGINA = 20;
+    let paginaAtual = 1;
+    let itensFiltrados = [];
+
+    function obterTodosCards() {
+        return Array.from(document.querySelectorAll('#gridJornais .card-item'));
+    }
+
+    function filtrarJornais() {
+        const termo = document.getElementById('campoPesquisa').value.toLowerCase().trim();
+        const todos = obterTodosCards();
+
+        itensFiltrados = todos.filter(card => {
+            const titulo = (card.dataset.titulo || '').toLowerCase();
+            const codigo = (card.dataset.codigo || '').toLowerCase();
+            const editora = (card.dataset.editora || '').toLowerCase();
+            return titulo.includes(termo) || codigo.includes(termo) || editora.includes(termo);
+        });
+
+        paginaAtual = 1;
+        renderizar();
+    }
+
+    function renderizar() {
+        const todos = obterTodosCards();
+
+        // Esconde todos
+        todos.forEach(c => c.style.display = 'none');
+
+        const semResultados = document.getElementById('sem-resultados');
+        const info = document.getElementById('infoResultados');
+
+        if (itensFiltrados.length === 0) {
+            semResultados.style.display = 'block';
+            document.getElementById('termoPesquisado').textContent = document.getElementById('campoPesquisa').value;
+            document.getElementById('paginacao').innerHTML = '';
+            info.textContent = '';
+            return;
+        }
+
+        semResultados.style.display = 'none';
+
+        const inicio = (paginaAtual - 1) * POR_PAGINA;
+        const fim = Math.min(inicio + POR_PAGINA, itensFiltrados.length);
+        const pagina = itensFiltrados.slice(inicio, fim);
+
+        pagina.forEach(c => c.style.display = '');
+
+        const total = itensFiltrados.length;
+        info.textContent = `Exibindo ${inicio + 1}–${fim} de ${total} jornal${total !== 1 ? 'is' : ''}`;
+
+        renderizarPaginacao(total);
+    }
+
+    function renderizarPaginacao(total) {
+        const totalPaginas = Math.ceil(total / POR_PAGINA);
+        const nav = document.getElementById('paginacao');
+        nav.innerHTML = '';
+
+        if (totalPaginas <= 1) return;
+
+        const criarItem = (label, pagina, desativado = false, ativo = false) => {
+            const li = document.createElement('li');
+            li.className = 'page-item' + (desativado ? ' disabled' : '') + (ativo ? ' active' : '');
+            const a = document.createElement('a');
+            a.className = 'page-link';
+            a.href = '#';
+            a.innerHTML = label;
+            if (!desativado) {
+                a.addEventListener('click', e => {
+                    e.preventDefault();
+                    paginaAtual = pagina;
+                    renderizar();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+            li.appendChild(a);
+            return li;
+        };
+
+        nav.appendChild(criarItem('&laquo;', paginaAtual - 1, paginaAtual === 1));
+
+        // Janela de páginas
+        const janela = 2;
+        let inicio = Math.max(1, paginaAtual - janela);
+        let fim = Math.min(totalPaginas, paginaAtual + janela);
+
+        if (inicio > 1) {
+            nav.appendChild(criarItem('1', 1));
+            if (inicio > 2) nav.appendChild(criarItem('...', null, true));
+        }
+
+        for (let i = inicio; i <= fim; i++) {
+            nav.appendChild(criarItem(i, i, false, i === paginaAtual));
+        }
+
+        if (fim < totalPaginas) {
+            if (fim < totalPaginas - 1) nav.appendChild(criarItem('...', null, true));
+            nav.appendChild(criarItem(totalPaginas, totalPaginas));
+        }
+
+        nav.appendChild(criarItem('&raquo;', paginaAtual + 1, paginaAtual === totalPaginas));
+    }
+
+    // Inicializa com todos os itens visíveis
+    document.addEventListener('DOMContentLoaded', () => {
+        itensFiltrados = obterTodosCards();
+        renderizar();
+    });
+</script>
 </body>
 </html>

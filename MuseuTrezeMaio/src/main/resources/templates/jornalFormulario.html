@@ -73,6 +73,24 @@
                 </div>
 
                 <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="cidade" class="form-label">Cidade</label>
+                        <input type="text" id="cidade" class="form-control" th:field="*{localizacao.cidade}">
+                        <div class="text-danger small" th:if="${#fields.hasErrors('localizacao.cidade')}" th:errors="*{localizacao.cidade}"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="estado" class="form-label">Estado</label>
+                        <input type="text" id="estado" class="form-control" th:field="*{localizacao.estado}">
+                        <div class="text-danger small" th:if="${#fields.hasErrors('localizacao.estado')}" th:errors="*{localizacao.estado}"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="estado" class="form-label">País</label>
+                        <input type="text" id="pais" class="form-control" th:field="*{localizacao.pais}">
+                        <div class="text-danger small" th:if="${#fields.hasErrors('localizacao.pais')}" th:errors="*{localizacao.pais}"></div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
                     <div class="col-md-12">
                         <label for="localizacaoAcervo" class="form-label">Localização no Acervo *</label>
                         <input type="text" id="localizacaoAcervo" class="form-control" th:field="*{localizacaoAcervo}">
@@ -93,22 +111,9 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="cidade" class="form-label">Cidade de Origem</label>
-                        <input type="text" id="cidade" class="form-control" th:field="*{localizacao.cidade}">
-                        <div class="text-danger small" th:if="${#fields.hasErrors('localizacao.cidade')}" th:errors="*{localizacao.cidade}"></div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="estado" class="form-label">Estado de Origem</label>
-                        <input type="text" id="estado" class="form-control" th:field="*{localizacao.estado}">
-                        <div class="text-danger small" th:if="${#fields.hasErrors('localizacao.estado')}" th:errors="*{localizacao.estado}"></div>
-                    </div>
-                </div>
-
                 <div class="row mb-4">
                     <div class="col-md-12">
-                        <label for="fileCapa" class="form-label">Imagem da Capa (Opcional)</label>
+                        <label for="fileCapa" class="form-label">Imagem da Capa</label>
                         <input type="file" id="fileCapa" name="fileCapa" class="form-control" accept="image/*">
                     </div>
                 </div>

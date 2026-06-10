@@ -41,6 +41,8 @@ public class ItemAcervo {
 
     protected int numeroPaginas;
 
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     protected byte[] capa;
 
     public int getIdItemAcervo() {
