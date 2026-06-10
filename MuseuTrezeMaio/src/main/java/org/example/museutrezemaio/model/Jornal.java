@@ -2,6 +2,7 @@ package org.example.museutrezemaio.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class Jornal extends ItemAcervo {
     private String codigoJornal;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotBlank(message = "O campo data é obrigatório")
+    @NotNull(message = "O campo data é obrigatório")
     @Column(nullable = false)
     private Date data;
 

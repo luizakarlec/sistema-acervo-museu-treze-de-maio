@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${jornal.titulo} + ' — Detalhes'">Detalhes do Jornal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <style>
+        .capa-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+        }
+        .capa-img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+            object-fit: cover;
+            aspect-ratio: 3/4;
+        }
+        .capa-placeholder {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            gap: 10px;
+        }
+        .detalhe-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6c757d;
+            margin-bottom: 2px;
+        }
+        .detalhe-valor {
+            font-size: 0.95rem;
+            color: #212529;
+            margin-bottom: 0;
+        }
+        .detalhe-item {
+            padding: 0.65rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .detalhe-item:last-child {
+            border-bottom: none;
+        }
+        .secao-titulo {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #adb5bd;
+            margin-bottom: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        .badge-status {
+            font-size: 0.8rem;
+            padding: 0.35em 0.75em;
+        }
+        .descricao-bloco {
+            background: #f8f9fa;
+            border-left: 3px solid #0d6efd;
+            border-radius: 0 6px 6px 0;
+            padding: 0.85rem 1rem;
+            font-size: 0.92rem;
+            color: #495057;
+            line-height: 1.6;
+        }
+        .notas-bloco {
+            background: #fff8e1;
+            border-left: 3px solid #ffc107;
+            border-radius: 0 6px 6px 0;
+            padding: 0.85rem 1rem;
+            font-size: 0.92rem;
+            color: #495057;
+            line-height: 1.6;
+        }
+        @media (max-width: 767px) {
+            .capa-wrapper {
+                max-width: 180px;
+                margin: 0 auto 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4 mb-5">
+    <div class="row me-0">
+        <div class="col-md-10 bg-light p-4 rounded shadow-sm">
+
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb mb-0" style="font-size:0.85rem;">
+                    <li class="breadcrumb-item"><a th:href="@{/#}">Início</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/jornal/jornalLista}">Jornais</a></li>
+                    <li class="breadcrumb-item active" th:text="${jornal.titulo}">Título</li>
+                </ol>
+            </nav>
+
+            <!-- Cabeçalho: capa + título -->
+            <div class="d-flex flex-column flex-md-row gap-4 mb-4">
+
+                <!-- Capa -->
+                <div class="capa-wrapper flex-shrink-0">
+                    <img th:if="${jornal.capa != null}"
+                         th:src="@{/jornal/capa/{id}(id=${jornal.idItemAcervo})}"
+                         th:alt="${jornal.titulo}"
+                         class="capa-img">
+                    <div th:unless="${jornal.capa != null}" class="capa-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-newspaper" viewBox="0 0 16 16">
+                            <path d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.5A1.5 1.5 0 0 1 0 13.028V2.5zm1 10.528c0 .27.187.5.5.5h11c.7 0 1-.5 1-1V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v10.528z"/>
+                            <path d="M2 3h4v4H2V3zm1 1v2h2V4H3zM2 8h4v1H2V8zm0 2h4v1H2v-1zm0 2h4v1H2v-1zm5-8h4v1H7V4zm0 2h4v1H7V6zm0 2h4v1H7V8zm0 2h4v1H7v-1zm0 2h4v1H7v-1z"/>
+                        </svg>
+                        <span style="font-size:0.8rem;">Sem imagem</span>
+                    </div>
+                </div>
+
+                <!-- Título e info principal -->
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-start gap-2 flex-wrap mb-1">
+                        <h1 class="h3 mb-0 fw-bold" th:text="${jornal.titulo}">Título do Jornal</h1>
+                        <span th:if="${jornal.ativo}" class="badge bg-success badge-status align-self-center">Ativo</span>
+                        <span th:unless="${jornal.ativo}" class="badge bg-danger badge-status align-self-center">Inativo</span>
+                    </div>
+
+                    <p class="text-muted mb-3" th:if="${jornal.subtitulo != null and !#strings.isEmpty(jornal.subtitulo)}"
+                       th:text="${jornal.subtitulo}">Subtítulo</p>
+
+                    <!-- Identificação rápida -->
+                    <div class="d-flex flex-wrap gap-3 mb-3">
+                        <div>
+                            <div class="detalhe-label">Código</div>
+                            <div class="detalhe-valor fw-semibold" th:text="${jornal.codigoJornal}">—</div>
+                        </div>
+                        <div>
+                            <div class="detalhe-label">Data</div>
+                            <div class="detalhe-valor" th:text="${#dates.format(jornal.data, 'dd/MM/yyyy')}">—</div>
+                        </div>
+                        <div>
+                            <div class="detalhe-label">Edição</div>
+                            <div class="detalhe-valor" th:text="${jornal.edicao}">—</div>
+                        </div>
+                        <div>
+                            <div class="detalhe-label">Idioma</div>
+                            <div class="detalhe-valor" th:text="${jornal.idioma}">—</div>
+                        </div>
+                    </div>
+
+                    <!-- Botão editar — visível apenas para administradores
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/jornal/editar/{id}(id=${jornal.idItemAcervo})}"
+                           class="btn btn-warning btn-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil me-1" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                            Editar
+                        </a>
+                    </div>
+                    -->
+
+                    <a th:href="@{/jornal/editar/{id}(id=${jornal.idItemAcervo})}"
+                       class="btn btn-warning btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil me-1" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                        </svg>
+                        Editar
+                    </a>
+                </div>
+            </div>
+
+            <hr class="my-3">
+
+            <!-- Descrição -->
+            <div th:if="${jornal.descricao != null and !#strings.isEmpty(jornal.descricao)}" class="mb-4">
+                <div class="secao-titulo">Descrição</div>
+                <div class="descricao-bloco" th:text="${jornal.descricao}">—</div>
+            </div>
+
+            <!-- Notas — visíveis publicamente apenas se visibilidadeNotas = true; sempre para admin -->
+            <div th:if="${jornal.notas != null and !#strings.isEmpty(jornal.notas)}"
+                 th:classappend="${jornal.visibilidadeNotas} ? '' : 'd-none'"
+                 class="mb-4 nota-bloco-publico">
+                <div class="secao-titulo">Notas</div>
+                <div class="notas-bloco" th:text="${jornal.notas}">—</div>
+            </div>
+
+            <!-- Notas para admin mesmo quando visibilidade = false
+            <div sec:authorize="hasRole('ADMIN')"
+                 th:if="${jornal.notas != null and !#strings.isEmpty(jornal.notas) and !jornal.visibilidadeNotas}"
+                 class="mb-4">
+                <div class="secao-titulo">
+                    Notas
+                    <span class="badge bg-secondary ms-1" style="font-size:0.65rem;vertical-align:middle;">Oculta do público</span>
+                </div>
+                <div class="notas-bloco" th:text="${jornal.notas}">—</div>
+            </div>
+             -->
+
+            <div class="secao-titulo">
+                Notas
+                <span class="badge bg-secondary ms-1" style="font-size:0.65rem;vertical-align:middle;">Oculta do público</span>
+            </div>
+            <div class="notas-bloco" th:text="${jornal.notas}">—</div>
+
+            <!-- Informações bibliográficas -->
+            <div class="secao-titulo">Informações bibliográficas</div>
+            <div class="row g-0">
+
+                <div class="col-12 col-md-6">
+                    <div class="detalhe-item pe-md-4">
+                        <div class="detalhe-label">Editora</div>
+                        <div class="detalhe-valor" th:text="${jornal.editora != null ? jornal.editora.nome : 'Sem editora'}">—</div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="detalhe-item pe-md-4">
+                        <div class="detalhe-label">Número de páginas</div>
+                        <div class="detalhe-valor"
+                             th:text="${jornal.numeroPaginas > 0 ? jornal.numeroPaginas : '—'}">—</div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="detalhe-item pe-md-4">
+                        <div class="detalhe-label">Localização no acervo</div>
+                        <div class="detalhe-valor" th:text="${jornal.localizacaoAcervo}">—</div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="detalhe-item pe-md-4">
+                        <div class="detalhe-label">Idioma</div>
+                        <div class="detalhe-valor" th:text="${jornal.idioma}">—</div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="detalhe-item pe-md-4">
+                        <div class="detalhe-label">Edição</div>
+                        <div class="detalhe-valor" th:text="${jornal.edicao}">—</div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6"
+                     th:if="${jornal.localizacao != null}">
+                    <div class="detalhe-item pe-md-4">
+                        <div class="detalhe-label">Localização física</div>
+                        <div class="detalhe-valor"
+                             th:text="${jornal.localizacao?.cidade != null ? jornal.localizacao.cidade : ''} + ${jornal.localizacao?.estado != null ? ', ' + jornal.localizacao.estado : ''} + ${jornal.localizacao?.pais != null ? ' - ' + jornal.localizacao.pais : ''}">—</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Rodapé -->
+            <div class="d-flex gap-2 mt-4 flex-wrap">
+                <a th:href="@{/jornal/jornalLista}" class="btn btn-primary btn-sm">← Voltar para jornais</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

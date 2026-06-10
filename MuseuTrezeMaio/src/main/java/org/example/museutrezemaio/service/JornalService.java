@@ -1,12 +1,11 @@
 package org.example.museutrezemaio.service;
 
-import org.example.museutrezemaio.model.Editora;
 import org.example.museutrezemaio.model.Jornal;
-import org.example.museutrezemaio.model.Localizacao;
-import org.example.museutrezemaio.repository.EditoraRepository;
 import org.example.museutrezemaio.repository.JornalRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +17,17 @@ public class JornalService {
         this.jornalRepository = jornalRepository;
     }
 
-    public void salvar(Jornal jornal){
-        //regras de negócio
+    public void salvar(Jornal jornal, MultipartFile fileCapa) throws IOException {
+
+        if (!fileCapa.isEmpty()) {
+            // Nova imagem enviada: usa ela
+            jornal.setCapa(fileCapa.getBytes());
+        } else if (jornal.getIdItemAcervo() != 0) {
+            // Edição sem nova imagem: mantém a capa existente no banco
+            jornalRepository.findById(jornal.getIdItemAcervo())
+                    .ifPresent(jornalExistente -> jornal.setCapa(jornalExistente.getCapa()));
+        }
+
         jornalRepository.save(jornal);
     }
 
