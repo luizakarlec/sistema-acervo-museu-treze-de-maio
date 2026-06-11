@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Assunto Formulario</title>
@@ -13,7 +13,7 @@
         <div class="row justify-content-center">
             <!-- Esta div controla a largura do quadro cinza (col-md-8) -->
             <div class="col-md-6 bg-light p-3 rounded shadow-sm">
-                <h1 class="text-center mt-0">Cadastro de Assuntos</h1>
+                <h1 class="text-center mt-0" >Cadastro de Assuntos</h1>
 
                 <form method="POST" th:action="@{/assunto/salvarAssunto}" th:object="${assunto}">
                     <input type="hidden" th:field="*{idAssunto}">

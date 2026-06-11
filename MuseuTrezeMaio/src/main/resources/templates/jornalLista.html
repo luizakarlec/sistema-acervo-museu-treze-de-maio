@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Lista de Jornais</title>
@@ -54,7 +54,7 @@
 
             <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
                 <h1 class="mb-0 h3">Lista de Jornais</h1>
-                <a type="button" th:href="@{/jornal/jornalFormulario}" class="btn btn-success">
+                <a type="button" th:href="@{/jornal/jornalFormulario}" class="btn btn-success" sec:authorize="isAuthenticated()">
                     + Novo Jornal
                 </a>
             </div>
