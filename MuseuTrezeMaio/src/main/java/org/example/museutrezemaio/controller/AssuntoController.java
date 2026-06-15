@@ -2,6 +2,9 @@ package org.example.museutrezemaio.controller;
 
 import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.service.AssuntoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,52 +23,58 @@ public class AssuntoController {
         this.assuntoService = assuntoService;
     }
 
-    @GetMapping("/assuntoFormulario")
-    public String exibirFormularioAssunto(Model model){
-        model.addAttribute("assunto",new Assunto());
-        return "assuntoFormulario";
-    }
 
     /*esta testado se o dado é valido antes de tentar salva no banco de dados */
     @PostMapping("/salvarAssunto")
-    public String salvarAssunto(@Validated @ModelAttribute Assunto assunto, BindingResult result) {
+    public String salvarAssunto(@Validated @ModelAttribute Assunto assunto, @RequestParam(defaultValue = "0") int page,BindingResult result, Model model) {
         //validação dos campos obrigatórios
         if (result.hasErrors()) {
-            return "assuntoFormulario";
+            Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
+            model.addAttribute("assunto", assunto);
+            model.addAttribute("paginaAssuntos", paginaAssuntos);
+
+            return "assunto";
         }
         try{
             assuntoService.salvar(assunto);
         }catch(IllegalArgumentException e){
             result.rejectValue("descricao", "error.assunto", e.getMessage());
-            return "assuntoFormulario";
+            Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
+            model.addAttribute("assuntos", paginaAssuntos);
+            model.addAttribute("paginaAssuntos", paginaAssuntos);
+            return "assunto";
         }
 
-        return "redirect:/assunto/assuntoLista";
+        return "redirect:/assunto/lista";
     }
 
-    @GetMapping("/assuntoLista")
-    public String assuntoLista(Model model) {
-        List<Assunto> assuntos = assuntoService.listarAssuntos();
-        model.addAttribute("assuntos", assuntos);
-        return "assuntoLista";
+    @GetMapping("/lista")
+    public String assuntoLista(@RequestParam(defaultValue = "0") int page, Model model) {
+        Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
+
+        model.addAttribute("assunto", new Assunto());
+        model.addAttribute("paginaAssuntos", paginaAssuntos);
+        return "assunto";
     }
 
     @GetMapping("/editar/{idAssunto}")
-    public String editarAssunto(@PathVariable int idAssunto, Model model) {
+    public String editarAssunto(@PathVariable int idAssunto,@RequestParam(defaultValue = "0") int page, Model model) {
         Assunto assunto = assuntoService.EditarId(idAssunto).orElseThrow(() -> new RuntimeException("Assunto não encontrado"));
+        Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
         model.addAttribute("assunto", assunto);
-        return "assuntoFormulario";
+        model.addAttribute("paginaAssuntos", paginaAssuntos);
+        return "assunto";
     }
 
-    @GetMapping("/pesquisarAssunto")
-    public String pesquisarPorDescricao(@RequestParam(value = "descricao", required = false) String descricao, Model model) {
-        List<Assunto> listaFiltrada = assuntoService.buscarPorDescricao(descricao);
-
-        // Adiciona a lista e o termo pesquisado de volta para a tela
-        model.addAttribute("assuntos", listaFiltrada);
-        model.addAttribute("descricaoPesquisada", descricao);
-
-        return "assuntoLista";
-    }
+//    @GetMapping("/pesquisarAssunto")
+//    public String pesquisarPorDescricao(@RequestParam(value = "descricao", required = false) String descricao, Model model) {
+//        List<Assunto> listaFiltrada = assuntoService.buscarPorDescricao(descricao);
+//
+//        // Adiciona a lista e o termo pesquisado de volta para a tela
+//        model.addAttribute("assuntos", listaFiltrada);
+//        model.addAttribute("descricaoPesquisada", descricao);
+//
+//        return "assunto";
+//    }
 
 }

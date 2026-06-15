@@ -2,6 +2,8 @@ package org.example.museutrezemaio.service;
 
 import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.repository.AssuntoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public class AssuntoService {
         assuntoRepository.save(assunto);
     }
 
-    public List<Assunto> listarAssuntos(){
-        return assuntoRepository.findAll();
+    public Page<Assunto> listarAssuntos(Pageable pageable){
+        return assuntoRepository.findAll(pageable);
     }
 
     public Optional<Assunto> EditarId(Integer id){
