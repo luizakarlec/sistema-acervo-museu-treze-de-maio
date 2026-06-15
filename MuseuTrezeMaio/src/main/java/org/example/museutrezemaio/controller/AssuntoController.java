@@ -2,6 +2,9 @@ package org.example.museutrezemaio.controller;
 
 import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.service.AssuntoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,11 +26,12 @@ public class AssuntoController {
 
     /*esta testado se o dado é valido antes de tentar salva no banco de dados */
     @PostMapping("/salvarAssunto")
-    public String salvarAssunto(@Validated @ModelAttribute Assunto assunto, BindingResult result, Model model) {
+    public String salvarAssunto(@Validated @ModelAttribute Assunto assunto, @RequestParam(defaultValue = "0") int page,BindingResult result, Model model) {
         //validação dos campos obrigatórios
         if (result.hasErrors()) {
+            Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
             model.addAttribute("assunto", assunto);
-            model.addAttribute("assuntos", assuntoService.listarAssuntos());
+            model.addAttribute("paginaAssuntos", paginaAssuntos);
 
             return "assunto";
         }
@@ -35,8 +39,9 @@ public class AssuntoController {
             assuntoService.salvar(assunto);
         }catch(IllegalArgumentException e){
             result.rejectValue("descricao", "error.assunto", e.getMessage());
-            model.addAttribute("assuntos", assuntoService.listarAssuntos());
-            model.addAttribute("assunto", assunto);
+            Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
+            model.addAttribute("assuntos", paginaAssuntos);
+            model.addAttribute("paginaAssuntos", paginaAssuntos);
             return "assunto";
         }
 
@@ -44,18 +49,20 @@ public class AssuntoController {
     }
 
     @GetMapping("/lista")
-    public String assuntoLista(Model model) {
+    public String assuntoLista(@RequestParam(defaultValue = "0") int page, Model model) {
+        Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
 
         model.addAttribute("assunto", new Assunto());
-        model.addAttribute("assuntos", assuntoService.listarAssuntos());
+        model.addAttribute("paginaAssuntos", paginaAssuntos);
         return "assunto";
     }
 
     @GetMapping("/editar/{idAssunto}")
-    public String editarAssunto(@PathVariable int idAssunto, Model model) {
+    public String editarAssunto(@PathVariable int idAssunto,@RequestParam(defaultValue = "0") int page, Model model) {
         Assunto assunto = assuntoService.EditarId(idAssunto).orElseThrow(() -> new RuntimeException("Assunto não encontrado"));
+        Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
         model.addAttribute("assunto", assunto);
-        model.addAttribute("assuntos", assuntoService.listarAssuntos());
+        model.addAttribute("paginaAssuntos", paginaAssuntos);
         return "assunto";
     }
 

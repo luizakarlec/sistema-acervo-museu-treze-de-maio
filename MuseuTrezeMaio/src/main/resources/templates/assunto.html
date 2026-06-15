@@ -66,7 +66,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="assunto :${assuntos}">
+                                    <tr th:each="assunto :${paginaAssuntos.content}">
                                         <td th:text="${assunto.descricao}" ></td>
                                         <td>
                                              <span th:if="${assunto.ativo}" class="badge bg-success">
@@ -85,6 +85,47 @@
                                     </tr>
                                 </tbody>
                             </table>
+
+                            <nav th:if="${paginaAssuntos.totalPages > 1}">
+                                <ul class="pagination justify-content-center mt-3">
+
+                                    <li class="page-item"
+                                        th:classappend="${paginaAssuntos.first} ? 'disabled'">
+
+                                        <a class="page-link "
+                                           th:href="@{/assunto/lista(page=${paginaAssuntos.number - 1})}">
+                                            Anterior
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, paginaAssuntos.totalPages - 1)}"
+                                        th:classappend="${i == paginaAssuntos.number} ? 'active'">
+
+                                        <a class="page-link"
+                                           th:text="${i + 1}"
+                                           th:href="@{/assunto/lista(page=${i})}">
+                                        </a>
+
+                                    </li>
+
+                                    <li class="page-item"
+                                        th:classappend="${paginaAssuntos.last} ? 'disabled'">
+
+                                        <a class="page-link"
+                                           th:href="@{/assunto/lista(page=${paginaAssuntos.number + 1})}">
+                                            Próxima
+                                        </a>
+
+                                    </li>
+
+                                </ul>
+                            </nav>
+
+
+
+
+
                         </div>
                     </div>
                 </div>

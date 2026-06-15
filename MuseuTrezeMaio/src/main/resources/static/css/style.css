@@ -12,3 +12,33 @@
 .table-hover tbody tr:hover {
     background-color: rgba(44, 91, 55, 0.05);
 }
+
+.pagination .page-link {
+    color: white;
+    background-color: #3f7f4d;
+    border-color: #2C5B37;
+}
+
+.pagination .page-link:hover {
+    color: white;
+    background-color: #23492c;
+    border-color: #23492c;
+}
+
+.pagination .page-item.active .page-link {
+    color: white;
+    background-color:#3f7f4d;
+    border-color: #2C5B37;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    background-color: #3f7f4d;
+    border-color: #2C5B37;
+    opacity: 0.6;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #1f4027;
+    border-color: #2C5B37;
+}
