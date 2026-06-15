@@ -183,7 +183,7 @@ public class ItemAcervo {
 
     @ManyToMany
     @JoinTable(
-            name = "Colaborador",
+            name = "itemAcervoColaborador",
             joinColumns = @JoinColumn(name = "idItemAcervo"),
             inverseJoinColumns = @JoinColumn(name = "idColaborador")
     )
@@ -191,7 +191,7 @@ public class ItemAcervo {
 
     @ManyToMany
     @JoinTable(
-            name = "Assunto",
+            name = "itemAcervoAssunto",
             joinColumns = @JoinColumn(name = "idItemAcervo"),
 
             inverseJoinColumns = @JoinColumn(name = "idAssunto")
