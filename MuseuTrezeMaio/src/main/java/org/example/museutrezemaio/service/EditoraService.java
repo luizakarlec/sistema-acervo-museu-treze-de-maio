@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class EditoraService {
@@ -37,8 +39,8 @@ public class EditoraService {
     }
 
 
-    public List<Editora>listaEditoras(){
-        return editoraRepository.findAll();
+    public Page<Editora>listaEditoras(Pageable pageable){
+        return editoraRepository.findAll(pageable);
     }
 
     public Optional<Editora> EditarId(Integer id){

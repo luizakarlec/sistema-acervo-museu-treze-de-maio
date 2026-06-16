@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Editora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Formulario -->
+                <div class="card card-hover border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-4">
+                            <i class="bi bi-building me-2" style="color: #2C5B37;"></i>
+                            Cadastro de Editora
+                        </h4>
+
+                        <div th:if="${mensagemSucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+
+                            <i class="bi bi-check-circle-fill me-2"></i><span th:text="${mensagemSucesso}"></span>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <form method="POST" th:action="@{/editora/salvarEditora}" th:object="${editora}">
+                            <input type="hidden" th:field="*{idEditora}">
+
+                            <div class="alert alert-danger"
+                                 th:if="${#fields.hasGlobalErrors()}">
+                                <p th:each="err : ${#fields.globalErrors()}"
+                                   th:text="${err}"></p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="nome" class="form-label">Nome da Editora <span class="text-danger">*</span> </label>
+                                    <input type="text" id="nome" class="form-control" placeholder="Digite o nome da editora" th:field="*{nome}">
+                                    <div class="text-danger"
+                                         th:if="${#fields.hasErrors('nome')}"
+                                         th:errors="*{nome}">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3 d-flex align-items-center">
+                                    <div class="form-check form-switch mt-4">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="ativo" th:field="*{ativo}" checked>
+                                        <label class="form-check-label" for="ativo">Ativo</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cidade" class="form-label">Cidade:</label>
+                                    <input type="text" id="cidade" class="form-control" placeholder="Digite a cidade sede da editora" th:field="*{localizacao.cidade}">
+                                    <div class="text-danger"
+                                         th:if="${#fields.hasErrors('localizacao')}"
+                                         th:errors="*{localizacao.cidade}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="estado" class="form-label">Estado:</label>
+                                    <input type="text" id="estado" class="form-control" placeholder="Digite o estado da sede da editora" th:field="*{localizacao.estado}">
+                                    <div class="text-danger"
+                                         th:if="${#fields.hasErrors('localizacao')}"
+                                         th:errors="*{localizacao.estado}">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-4">
+                            <div class="d-flex gap-2">
+                                    <button type="submit" class="btn text-white" style="background-color: #2C5B37 "> <i class="bi bi-save me-2"></i> Salvar</button>
+                                    <a th:href="@{/editora/lista}" class="btn btn-outline-secondary"><i class="bi bi-x-circle me-2"></i>Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <!-- Lista de Editora -->
+                <div class="card card-hover border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            Editoras cadastradas
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Localização</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="editora :${paginaEditoras.content}">
+                                        <td th:text="${editora.nome}" ></td>
+                                        <td th:text="${editora.localizacao.getLocalizacaoFormatada()}"></td>
+                                        <td>
+                                             <span th:if="${editora.ativo}" class="badge bg-success">Ativo</span>
+                                             <span th:unless="${editora.ativo}" class="badge bg-danger">Inativo</span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/editora/editar/{idEditora}(idEditora=${editora.idEditora})}"
+                                               class="btn btn-sm btn-outline-warning me-3"> <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <nav th:if="${paginaEditoras.totalPages > 1}">
+                                <ul class="pagination justify-content-center mt-3">
+
+                                    <li class="page-item" th:classappend="${paginaEditoras.first} ? 'disabled'">
+                                        <a class="page-link " th:href="@{/editora/lista(page=${paginaEditoras.number - 1})}">
+                                            Anterior
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaEditoras.totalPages - 1)}"
+                                        th:classappend="${i == paginaEditoras.number} ? 'active'">
+                                        <a class="page-link" th:text="${i + 1}" th:href="@{/editora/lista(page=${i})}"></a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        th:classappend="${paginaEditoras.last} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/editora/lista(page=${paginaEditoras.number + 1})}">
+                                            Próxima
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

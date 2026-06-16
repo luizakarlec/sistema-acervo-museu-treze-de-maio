@@ -21,6 +21,13 @@
                             Cadastro de Assunto
                         </h4>
 
+                        <div th:if="${mensagemSucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+
+                            <i class="bi bi-check-circle-fill me-2"></i><span th:text="${mensagemSucesso}"></span>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
                         <form method="POST" th:action="@{/assunto/salvarAssunto}" th:object="${assunto}">
                             <input type="hidden" th:field="*{idAssunto}">
 
@@ -89,48 +96,33 @@
                             <nav th:if="${paginaAssuntos.totalPages > 1}">
                                 <ul class="pagination justify-content-center mt-3">
 
-                                    <li class="page-item"
-                                        th:classappend="${paginaAssuntos.first} ? 'disabled'">
-
-                                        <a class="page-link "
-                                           th:href="@{/assunto/lista(page=${paginaAssuntos.number - 1})}">
+                                    <li class="page-item" th:classappend="${paginaAssuntos.first} ? 'disabled'">
+                                        <a class="page-link " th:href="@{/assunto/lista(page=${paginaAssuntos.number - 1})}">
                                             Anterior
                                         </a>
                                     </li>
 
-                                    <li class="page-item"
-                                        th:each="i : ${#numbers.sequence(0, paginaAssuntos.totalPages - 1)}"
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaAssuntos.totalPages - 1)}"
                                         th:classappend="${i == paginaAssuntos.number} ? 'active'">
-
-                                        <a class="page-link"
-                                           th:text="${i + 1}"
-                                           th:href="@{/assunto/lista(page=${i})}">
-                                        </a>
-
+                                        <a class="page-link" th:text="${i + 1}" th:href="@{/assunto/lista(page=${i})}"></a>
                                     </li>
 
                                     <li class="page-item"
                                         th:classappend="${paginaAssuntos.last} ? 'disabled'">
-
-                                        <a class="page-link"
-                                           th:href="@{/assunto/lista(page=${paginaAssuntos.number + 1})}">
+                                        <a class="page-link" th:href="@{/assunto/lista(page=${paginaAssuntos.number + 1})}">
                                             Próxima
                                         </a>
-
                                     </li>
-
                                 </ul>
                             </nav>
-
-
-
-
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+
 </body>
 </html>

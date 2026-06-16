@@ -2,11 +2,15 @@ package org.example.museutrezemaio.controller;
 
 import org.example.museutrezemaio.model.Editora;
 import org.example.museutrezemaio.service.EditoraService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -18,39 +22,56 @@ public class EditoraController {
     public EditoraController(EditoraService editoraService) {
         this.editoraService = editoraService;
     }
-    @GetMapping("/editoraFormulario")
-    public String exibirFormularioEditora(Model model){
-        model.addAttribute("editora",new Editora());
-        return "editoraFormulario";
-    }
+
 
     /* esta testado se o dado é valido antes de tentar salva no banco de dados */
     @PostMapping("/salvarEditora")
-    public String salvarEditora(@Validated @ModelAttribute Editora editora, BindingResult result) {
+    public String salvarEditora(@Validated @ModelAttribute Editora editora, BindingResult result, @RequestParam(defaultValue = "0") int page, Model model,  RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            return "editoraFormulario";
+            Page<Editora> paginaEditoras = editoraService.listaEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
+            model.addAttribute("paginaEditoras", paginaEditoras);
+            model.addAttribute("editora", editora);
+            return "editora";
         }
         try {
             editoraService.salvar(editora);
 
         } catch (IllegalArgumentException e) {
             result.reject("erro", e.getMessage());
-            return "editoraFormulario";
+            Page<Editora> paginaEditoras = editoraService.listaEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
+            model.addAttribute("paginaEditoras", paginaEditoras);
+            model.addAttribute("editora", editora);
+
+            return "editora";
         }
-        return "redirect:/editora/editoraLista";
+        if (editora.getIdEditora() > 0) {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemSucesso",
+                    "Editora atualizada com sucesso!"
+            );
+        } else {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemSucesso",
+                    "Editorta cadastrada com sucesso!"
+            );
+        }
+        return "redirect:/editora/lista";
     }
 
-    @GetMapping("/editoraLista")
-    public String editoraLista(Model model) {
-        List<Editora> editoras = editoraService.listaEditoras();
-        model.addAttribute("editoras", editoras);
-        return "editoraLista";
+    @GetMapping("/lista")
+    public String editoraLista(@RequestParam(defaultValue = "0") int page,Model model) {
+        Page<Editora> paginaEditoras = editoraService.listaEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
+        model.addAttribute("paginaEditoras", paginaEditoras);
+        model.addAttribute("editora",new Editora());
+        return "editora";
     }
 
     @GetMapping("/editar/{idEditora}")
-    public String editarEditora(@PathVariable int idEditora, Model model) {
+    public String editarEditora(@PathVariable int idEditora,@RequestParam(defaultValue = "0") int page, Model model) {
         Editora editora = editoraService.EditarId(idEditora).orElseThrow(() -> new RuntimeException("Editora não encontrado"));
-        model.addAttribute("editora", editora);
-        return "editoraFormulario";
+        Page<Editora> paginaEditoras = editoraService.listaEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
+        model.addAttribute("paginaEditoras", paginaEditoras);
+        model.addAttribute("editora",editora);
+        return "editora";
     }
 }
