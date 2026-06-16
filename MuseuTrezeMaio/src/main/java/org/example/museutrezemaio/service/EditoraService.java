@@ -3,6 +3,7 @@ package org.example.museutrezemaio.service;
 import org.example.museutrezemaio.model.Editora;
 import org.example.museutrezemaio.model.Localizacao;
 import org.example.museutrezemaio.repository.EditoraRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,8 +40,12 @@ public class EditoraService {
     }
 
 
-    public Page<Editora>listaEditoras(Pageable pageable){
+    public Page<Editora>listaTodasEditoras(Pageable pageable){
         return editoraRepository.findAll(pageable);
+    }
+
+    public List<Editora> listaEditoras() {
+        return editoraRepository.findAll(Sort.by("nome").ascending());
     }
 
     public Optional<Editora> EditarId(Integer id){
