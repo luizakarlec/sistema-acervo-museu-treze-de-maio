@@ -30,7 +30,7 @@ public class AssuntoController {
     public String salvarAssunto(@Validated @ModelAttribute Assunto assunto, BindingResult result, @RequestParam(defaultValue = "0") int page,Model model,  RedirectAttributes redirectAttributes) {
         //validação dos campos obrigatórios
         if (result.hasErrors()) {
-            Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
+            Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(page);
             model.addAttribute("assunto", assunto);
             model.addAttribute("paginaAssuntos", paginaAssuntos);
 
@@ -40,7 +40,7 @@ public class AssuntoController {
             assuntoService.salvar(assunto);
         }catch(IllegalArgumentException e){
             result.rejectValue("descricao", "error.assunto", e.getMessage());
-            Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
+            Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(page);
             model.addAttribute("assuntos", paginaAssuntos);
             model.addAttribute("paginaAssuntos", paginaAssuntos);
             return "assunto";
@@ -63,8 +63,7 @@ public class AssuntoController {
 
     @GetMapping("/lista")
     public String assuntoLista(@RequestParam(defaultValue = "0") int page, Model model) {
-        Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
-
+        Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(page);
         model.addAttribute("assunto", new Assunto());
         model.addAttribute("paginaAssuntos", paginaAssuntos);
         return "assunto";
@@ -73,7 +72,7 @@ public class AssuntoController {
     @GetMapping("/editar/{idAssunto}")
     public String editarAssunto(@PathVariable int idAssunto,@RequestParam(defaultValue = "0") int page, Model model) {
         Assunto assunto = assuntoService.EditarId(idAssunto).orElseThrow(() -> new RuntimeException("Assunto não encontrado"));
-        Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
+        Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(page);
         model.addAttribute("assunto", assunto);
         model.addAttribute("paginaAssuntos", paginaAssuntos);
         return "assunto";
