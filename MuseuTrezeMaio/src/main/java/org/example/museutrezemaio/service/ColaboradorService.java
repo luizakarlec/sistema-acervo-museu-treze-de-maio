@@ -1,7 +1,11 @@
 package org.example.museutrezemaio.service;
 
+import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.model.Colaborador;
 import org.example.museutrezemaio.repository.ColaboradorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +27,11 @@ public class ColaboradorService {
     }
 
     public List<Colaborador> listarColaboradores(){
-        return colaboradorRepository.findAll();
+        return colaboradorRepository.findAll(Sort.by("nome").ascending());
+    }
+
+    public Page<Colaborador> listarTodosColaboradores(int page){
+        return colaboradorRepository.findAll(PageRequest.of(page,15,Sort.by("nome").ascending()));
     }
 
     public Optional<Colaborador> EditarId(Integer id){

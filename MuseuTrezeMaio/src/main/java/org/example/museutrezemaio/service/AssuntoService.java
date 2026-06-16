@@ -1,9 +1,12 @@
 package org.example.museutrezemaio.service;
 
 import org.example.museutrezemaio.model.Assunto;
+import org.example.museutrezemaio.model.Editora;
 import org.example.museutrezemaio.repository.AssuntoRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +28,13 @@ public class AssuntoService {
         assuntoRepository.save(assunto);
     }
 
-    public Page<Assunto> listarAssuntos(Pageable pageable){
-        return assuntoRepository.findAll(pageable);
+    public List<Assunto> listaAssuntos() {
+        return assuntoRepository.findAll(Sort.by("descricao").ascending());
+    }
+
+    public Page<Assunto> listarAssuntos(int page){
+
+        return assuntoRepository.findAll(PageRequest.of(page,15,Sort.by("descricao").ascending()));
     }
 
     public Optional<Assunto> EditarId(Integer id){
@@ -39,5 +47,6 @@ public class AssuntoService {
         }
         return assuntoRepository.findByDescricaoContainingIgnoreCase(descricao);
     }
+
 
 }
