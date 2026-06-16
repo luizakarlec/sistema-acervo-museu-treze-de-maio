@@ -1,4 +1,7 @@
-/* Card hover effects */
+/*  CONFIGURACOES DE ESTILO */
+
+
+/* Configuração dos cads de assunto, editora e colaborador */
 .card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -8,11 +11,12 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Table row hover */
+/* Configuração das tabelas de listagem de assunto, editora e colaborador */
 .table-hover tbody tr:hover {
     background-color: rgba(44, 91, 55, 0.05);
 }
 
+/* Configurações de paginação */
 .pagination .page-link {
     color: white;
     background-color: #3f7f4d;

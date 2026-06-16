@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class AssuntoController {
 
     /*esta testado se o dado é valido antes de tentar salva no banco de dados */
     @PostMapping("/salvarAssunto")
-    public String salvarAssunto(@Validated @ModelAttribute Assunto assunto, @RequestParam(defaultValue = "0") int page,BindingResult result, Model model) {
+    public String salvarAssunto(@Validated @ModelAttribute Assunto assunto, BindingResult result, @RequestParam(defaultValue = "0") int page,Model model,  RedirectAttributes redirectAttributes) {
         //validação dos campos obrigatórios
         if (result.hasErrors()) {
             Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(PageRequest.of(page,15, Sort.by("descricao").ascending()));
@@ -43,6 +44,18 @@ public class AssuntoController {
             model.addAttribute("assuntos", paginaAssuntos);
             model.addAttribute("paginaAssuntos", paginaAssuntos);
             return "assunto";
+        }
+
+        if (assunto.getIdAssunto() > 0) {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemSucesso",
+                    "Assunto atualizado com sucesso!"
+            );
+        } else {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemSucesso",
+                    "Assunto cadastrado com sucesso!"
+            );
         }
 
         return "redirect:/assunto/lista";
