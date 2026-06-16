@@ -28,7 +28,7 @@ public class EditoraController {
     @PostMapping("/salvarEditora")
     public String salvarEditora(@Validated @ModelAttribute Editora editora, BindingResult result, @RequestParam(defaultValue = "0") int page, Model model,  RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            Page<Editora> paginaEditoras = editoraService.listaEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
+            Page<Editora> paginaEditoras = editoraService.listaTodasEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
             model.addAttribute("paginaEditoras", paginaEditoras);
             model.addAttribute("editora", editora);
             return "editora";
@@ -38,7 +38,7 @@ public class EditoraController {
 
         } catch (IllegalArgumentException e) {
             result.reject("erro", e.getMessage());
-            Page<Editora> paginaEditoras = editoraService.listaEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
+            Page<Editora> paginaEditoras = editoraService.listaTodasEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
             model.addAttribute("paginaEditoras", paginaEditoras);
             model.addAttribute("editora", editora);
 
@@ -60,7 +60,7 @@ public class EditoraController {
 
     @GetMapping("/lista")
     public String editoraLista(@RequestParam(defaultValue = "0") int page,Model model) {
-        Page<Editora> paginaEditoras = editoraService.listaEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
+        Page<Editora> paginaEditoras = editoraService.listaTodasEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
         model.addAttribute("paginaEditoras", paginaEditoras);
         model.addAttribute("editora",new Editora());
         return "editora";
@@ -69,7 +69,7 @@ public class EditoraController {
     @GetMapping("/editar/{idEditora}")
     public String editarEditora(@PathVariable int idEditora,@RequestParam(defaultValue = "0") int page, Model model) {
         Editora editora = editoraService.EditarId(idEditora).orElseThrow(() -> new RuntimeException("Editora não encontrado"));
-        Page<Editora> paginaEditoras = editoraService.listaEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
+        Page<Editora> paginaEditoras = editoraService.listaTodasEditoras(PageRequest.of(page,15, Sort.by("nome").ascending()));
         model.addAttribute("paginaEditoras", paginaEditoras);
         model.addAttribute("editora",editora);
         return "editora";
