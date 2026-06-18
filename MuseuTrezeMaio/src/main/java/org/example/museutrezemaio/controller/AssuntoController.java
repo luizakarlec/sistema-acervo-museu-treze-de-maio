@@ -64,8 +64,12 @@ public class AssuntoController {
     @GetMapping("/lista")
     public String assuntoLista(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<Assunto> paginaAssuntos = assuntoService.listarAssuntos(page);
+        List<Assunto>todosAssuntos = assuntoService.buscarPorDescricao("");
+
         model.addAttribute("assunto", new Assunto());
         model.addAttribute("paginaAssuntos", paginaAssuntos);
+        model.addAttribute("todosAssuntos", todosAssuntos); //lista para o JS
+
         return "assunto";
     }
 
@@ -78,15 +82,6 @@ public class AssuntoController {
         return "assunto";
     }
 
-//    @GetMapping("/pesquisarAssunto")
-//    public String pesquisarPorDescricao(@RequestParam(value = "descricao", required = false) String descricao, Model model) {
-//        List<Assunto> listaFiltrada = assuntoService.buscarPorDescricao(descricao);
-//
-//        // Adiciona a lista e o termo pesquisado de volta para a tela
-//        model.addAttribute("assuntos", listaFiltrada);
-//        model.addAttribute("descricaoPesquisada", descricao);
-//
-//        return "assunto";
-//    }
+
 
 }
