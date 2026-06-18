@@ -60,7 +60,7 @@ public class JornalController {
     @GetMapping("/jornalLista")
     public String jornalLista(Model model) {
         List<Jornal> jornais = jornalService.listaJornais();
-        model.addAttribute("jornais", jornais);
+        model.addAttribute("listaJornais", jornais);
         return "jornalLista";
     }
 
