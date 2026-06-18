@@ -59,8 +59,11 @@ public class ColaboradorController {
     @GetMapping("/lista")
     public String colaboradorLista(@RequestParam(defaultValue = "0") int page,Model model) {
         Page<Colaborador>paginaColaboradores = colaboradorService.listarTodosColaboradores(page);
+        List<Colaborador> todosColaboradores = colaboradorService.listarColaboradores();
+
         model.addAttribute("colaborador", new Colaborador());
         model.addAttribute("paginaColaboradores", paginaColaboradores);
+        model.addAttribute("todosColaboradores", todosColaboradores);
         return "colaborador";
     }
 

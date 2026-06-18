@@ -60,10 +60,23 @@
                 <!-- Lista de Assuntos -->
                 <div class="card card-hover border-0 shadow-sm mt-4">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-3">
-                            Assuntos Cadastrados
-                        </h5>
-                        <div class="table-responsive">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">
+                                Assuntos Cadastrados
+                            </h5>
+                            <div style="max-width: 350px; width: 100%;">
+                                <div class="input-group input-group-sm">
+                                    <!-- Campo de Pesquisa -->
+                                    <input type="text" id="inputPesquisa" oninput="pesquisaGlobal()" class="form-control" placeholder="Pesquisar assunto">
+
+                                    <!-- Botão de Limpar (Exibe um "X" e o ícone de lixeira ou texto, usei o "x-lg" do Bootstrap Icons) -->
+                                    <button class="btn btn-outline-secondary" type="button" onclick="limparPesquisa()" title="Limpar pesquisa">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive" id="containerTabelaPaginada">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -116,11 +129,133 @@
                                 </ul>
                             </nav>
                         </div>
+                        <!-- 2. CONTAINER DA TABELA DE BUSCA GLOBAL (Inicia oculta) -->
+                        <div class="table-responsive" id="containerTabelaBusca" style="display: none;">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody id="corpoResultadosBusca">
+                                <!-- Gerado dinamicamente pelo JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+    <!-- 3. CARREGAMENTO DOS DADOS NO HTML OCULTO (A PROVA DE FALHAS) -->
+    <!-- O Thymeleaf gera elementos invisíveis contendo os atributos que o JavaScript precisa ler -->
+    <div id="dados-assuntos-armazenados" style="display: none;">
+        <div class="dado-assunto-item"
+             th:each="assunto : ${todosAssuntos}"
+             th:data-id="${assunto.idAssunto}"
+             th:data-descricao="${assunto.descricao}"
+             th:data-ativo="${assunto.ativo}">
+        </div>
+    </div>
+
+    <!-- 4. SCRIPT DE FILTRAGEM DINÂMICA REFORMULADO -->
+    <script>
+        // Array global que armazenará os dados mapeados do HTML acima
+        let todosOsAssuntos = [];
+
+        // Esta função roda assim que o navegador carrega a página por completo
+        document.addEventListener("DOMContentLoaded", function() {
+            // Seleciona todos os elementos invisíveis gerados pelo Thymeleaf
+            const elementosDados = document.querySelectorAll(".dado-assunto-item");
+
+            elementosDados.forEach(elemento => {
+                // Converte os atributos de texto 'data-' para tipos booleanos e inteiros corretos
+                todosOsAssuntos.push({
+                    idAssunto: elemento.getAttribute("data-id"),
+                    descricao: elemento.getAttribute("data-descricao"),
+                    ativo: elemento.getAttribute("data-ativo") === "true" // Converte string 'true' para booleano
+                });
+            });
+
+            // Exibe no console do seu navegador quantos registros foram carregados para te ajudar a testar
+            console.log("Busca digital inicializada com " + todosOsAssuntos.length + " assuntos carregados.");
+        });
+
+        function pesquisaGlobal() {
+            console.log("Pesquisa executada")
+            const termo = document.getElementById("inputPesquisa").value.trim().toLowerCase();
+            const containerPaginado = document.getElementById("containerTabelaPaginada");
+            const containerBusca = document.getElementById("containerTabelaBusca");
+            const corpoResultados = document.getElementById("corpoResultadosBusca");
+
+            console.log("containerPaginado:", containerPaginado);
+            console.log("containerBusca:", containerBusca);
+            console.log("corpoResultados:", corpoResultados);
+
+            // Se o campo estiver vazio ou limpo, restaura a tabela original com paginação
+            if (termo === "") {
+                containerPaginado.style.display = "";
+                containerBusca.style.display = "none";
+                corpoResultados.innerHTML = "";
+                return;
+            }
+
+            // Filtra os dados garantindo que a propriedade 'descricao' existe
+            const filtrados = todosOsAssuntos.filter(assunto => {
+                return assunto && assunto.descricao && assunto.descricao.toString().toLowerCase().includes(termo);
+            });
+
+            // Alterna a exibição das tabelas
+            containerPaginado.style.display = "none";
+            containerBusca.style.display = "";
+            corpoResultados.innerHTML = "";
+
+            if (filtrados.length === 0) {
+                corpoResultados.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Nenhum assunto encontrado para "${termo}".</td></tr>`;
+                return;
+            }
+
+            // Reconstrói as linhas na tela respeitando o design original do Bootstrap
+            filtrados.forEach(assunto => {
+                const statusTexto = assunto.ativo ? 'Ativo' : 'Inativo';
+                const badgeClasse = assunto.ativo ? 'bg-success' : 'bg-danger';
+
+                const linhaHtml = `
+                <tr>
+                    <td>${assunto.descricao}</td>
+                    <td>
+                        <span class="badge ${badgeClasse}">${statusTexto}</span>
+                    </td>
+                    <td>
+                        <a href="/assunto/editar/${assunto.idAssunto}" class="btn btn-sm btn-outline-warning me-3">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+                corpoResultados.insertAdjacentHTML('beforeend', linhaHtml);
+            });
+        }
+
+        function limparPesquisa() {
+            const input = document.getElementById("inputPesquisa");
+
+            // Altera o valor para vazio apenas se houver algo digitado
+            if (input.value !== "") {
+                input.value = "";
+
+                // Dispara manualmente a função de pesquisa para que ela restaure a tabela original
+                pesquisaGlobal();
+            }
+        }
+
+    </script>
+
 
 
 

@@ -62,8 +62,10 @@ public class EditoraController {
     @GetMapping("/lista")
     public String editoraLista(@RequestParam(defaultValue = "0") int page,Model model) {
         Page<Editora> paginaEditoras = editoraService.listaTodasEditoras(page);
+        List<Editora> todasEditoras = editoraService.buscarPorNome("");
         model.addAttribute("paginaEditoras", paginaEditoras);
         model.addAttribute("editora",new Editora());
+        model.addAttribute("todasEditoras", todasEditoras); //lista para o JS
         return "editora";
     }
 
