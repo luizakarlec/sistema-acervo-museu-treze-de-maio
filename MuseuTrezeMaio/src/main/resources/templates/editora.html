@@ -83,10 +83,24 @@
                 <!-- Lista de Editora -->
                 <div class="card card-hover border-0 shadow-sm mt-4">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-3">
-                            Editoras cadastradas
-                        </h5>
-                        <div class="table-responsive">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">
+                                Editoras Cadastradas
+                            </h5>
+                            <div style="max-width: 350px; width: 100%;">
+                                <div class="input-group input-group-sm">
+                                    <!-- Campo de Pesquisa -->
+                                    <input type="text" id="inputPesquisa" oninput="pesquisaGlobal()" class="form-control" placeholder="Pesquisar editora por nome">
+
+                                    <!-- Botão de Limpar (Exibe um "X" e o ícone de lixeira ou texto, usei o "x-lg" do Bootstrap Icons) -->
+                                    <button class="btn btn-outline-secondary" type="button" onclick="limparPesquisa()" title="Limpar pesquisa">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive" id="containerTabelaPaginada">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -136,13 +150,123 @@
                                 </ul>
                             </nav>
                         </div>
+                        <!-- 2. CONTAINER DA TABELA DE BUSCA GLOBAL (Inicia oculta) -->
+                        <div class="table-responsive" id="containerTabelaBusca" style="display: none;">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Localização</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody id="corpoResultadosBusca">
+                                <!-- Gerado dinamicamente pelo JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 3. CARREGAMENTO DOS DADOS NO HTML OCULTO (A PROVA DE FALHAS) -->
+    <div id="dados-editoras-armazenados" style="display: none;">
+        <div class="dado-editora-item"
+             th:each="editora : ${todasEditoras}"
+             th:data-id="${editora.idEditora}"
+             th:data-nome="${editora.nome}"
+             th:data-localizacao="${editora.localizacao != null ? (editora.localizacao.cidade + ' - ' + editora.localizacao.estado) : ''}"
+             th:data-ativo="${editora.ativo}">
+        </div>
+    </div>
 
+    <!-- 4. SCRIPT DE FILTRAGEM DINÂMICA REFORMULADO PARA EDITORA (APENAS POR NOME) -->
+    <script>
+        let todasAsEditoras = [];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const elementosDados = document.querySelectorAll(".dado-editora-item");
+
+            elementosDados.forEach(elemento => {
+                todasAsEditoras.push({
+                    idEditora: elemento.getAttribute("data-id"),
+                    nome: elemento.getAttribute("data-nome"),
+                    localizacao: elemento.getAttribute("data-localizacao"),
+                    ativo: elemento.getAttribute("data-ativo") === "true"
+                });
+            });
+
+            console.log("Busca digital inicializada com " + todasAsEditoras.length + " editoras carregadas.");
+        });
+
+        function pesquisaGlobal() {
+            console.log("Pesquisa de editoras executada");
+            const termo = document.getElementById("inputPesquisa").value.trim().toLowerCase();
+            const containerPaginado = document.getElementById("containerTabelaPaginada");
+            const containerBusca = document.getElementById("containerTabelaBusca");
+            const corpoResultados = document.getElementById("corpoResultadosBusca");
+
+            // Se o campo estiver vazio ou limpo, restaura a tabela original com paginação
+            if (termo === "") {
+                containerPaginado.style.display = "";
+                containerBusca.style.display = "none";
+                corpoResultados.innerHTML = "";
+                return;
+            }
+
+            // ALTERADO: Filtra buscando correspondência APENAS no NOME da editora
+            const filtrados = todasAsEditoras.filter(editora => {
+                return editora && editora.nome && editora.nome.toString().toLowerCase().includes(termo);
+            });
+
+            // Alterna a exibição das tabelas
+            containerPaginado.style.display = "none";
+            containerBusca.style.display = "";
+            corpoResultados.innerHTML = "";
+
+            if (filtrados.length === 0) {
+                corpoResultados.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Nenhuma editora encontrada para "${termo}".</td></tr>`;
+                return;
+            }
+
+            // Reconstrói as linhas na tela
+            filtrados.forEach(editora => {
+                const statusTexto = editora.ativo ? 'Ativo' : 'Inativo';
+                const badgeClasse = editora.ativo ? 'bg-success' : 'bg-danger';
+
+                const linhaHtml = `
+                <tr>
+                    <td>${editora.nome}</td>
+                    <td>${editora.localizacao || ''}</td>
+                    <td>
+                        <span class="badge ${badgeClasse}">${statusTexto}</span>
+                    </td>
+                    <td>
+                        <a href="/editora/editar/${editora.idEditora}" class="btn btn-sm btn-outline-warning me-3">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+                corpoResultados.insertAdjacentHTML('beforeend', linhaHtml);
+            });
+        }
+
+        function limparPesquisa() {
+            const input = document.getElementById("inputPesquisa");
+
+            if (input.value !== "") {
+                input.value = "";
+                pesquisaGlobal();
+            }
+        }
+    </script>
 
 </body>
 </html>

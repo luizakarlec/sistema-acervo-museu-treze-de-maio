@@ -1,5 +1,6 @@
 package org.example.museutrezemaio.service;
 
+import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.model.Editora;
 import org.example.museutrezemaio.model.Localizacao;
 import org.example.museutrezemaio.repository.EditoraRepository;
@@ -53,4 +54,13 @@ public class EditoraService {
     public Optional<Editora> EditarId(Integer id){
         return editoraRepository.findById(id);
     }
+
+
+    public List<Editora> buscarPorNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return editoraRepository.findAll();
+        }
+        return editoraRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
 }
