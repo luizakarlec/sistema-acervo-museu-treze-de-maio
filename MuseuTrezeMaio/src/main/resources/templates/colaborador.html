@@ -100,10 +100,22 @@
                 <!-- Lista de Colaboradores -->
                 <div class="card card-hover border-0 shadow-sm mt-4">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-3">
-                            Colaboradores cadastrados
-                        </h5>
-                        <div class="table-responsive">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">
+                                Colaboradores Cadastrados
+                            </h5>
+                            <div style="max-width: 350px; width: 100%;">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="inputPesquisa" oninput="pesquisaGlobal()" class="form-control" placeholder="Pesquisar por nome, tipo ou nacionalidade...">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="limparPesquisa()" title="Limpar pesquisa">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="table-responsive" id="containerTabelaPaginada">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -155,12 +167,127 @@
                                 </ul>
                             </nav>
                         </div>
+
+                    <!-- 2. CONTAINER DA TABELA DE BUSCA GLOBAL (Inicia oculta) -->
+                        <div class="table-responsive" id="containerTabelaBusca" style="display: none;">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Nome Completo</th>
+                                    <th>Tipo</th>
+                                    <th>Nacionalidade</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody id="corpoResultadosBusca">
+                                <!-- Linhas geradas dinamicamente pelo JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 3. CARREGAMENTO DOS DADOS NO HTML OCULTO -->
+    <div id="dados-colaboradores-armazenados" style="display: none;">
+        <div class="dado-colaborador-item"
+             th:each="colaborador : ${todosColaboradores}"
+             th:data-id="${colaborador.idColaborador}"
+             th:data-nome-completo="${colaborador.nome} + ' ' + ${colaborador.sobrenome}"
+             th:data-tipo="${colaborador.tipo}"
+             th:data-nacionalidade="${colaborador.nacionalidade}"
+             th:data-ativo="${colaborador.ativo}">
+        </div>
+    </div>
+
+    <!-- 4. SCRIPT DE FILTRAGEM DINÂMICA MULTI-CAMPO -->
+    <script>
+        let todosOsColaboradores = [];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const elementosDados = document.querySelectorAll(".dado-colaborador-item");
+
+            elementosDados.forEach(elemento => {
+                todosOsColaboradores.push({
+                    idColaborador: elemento.getAttribute("data-id"),
+                    nomeCompleto: elemento.getAttribute("data-nome-completo"),
+                    tipo: elemento.getAttribute("data-tipo"),
+                    nacionalidade: elemento.getAttribute("data-nacionalidade"),
+                    ativo: elemento.getAttribute("data-ativo") === "true"
+                });
+            });
+
+            console.log("Busca digital inicializada com " + todosOsColaboradores.length + " colaboradores.");
+        });
+
+        function pesquisaGlobal() {
+            const termo = document.getElementById("inputPesquisa").value.trim().toLowerCase();
+            const containerPaginado = document.getElementById("containerTabelaPaginada");
+            const containerBusca = document.getElementById("containerTabelaBusca");
+            const corpoResultados = document.getElementById("corpoResultadosBusca");
+
+            if (termo === "") {
+                containerPaginado.style.display = "";
+                containerBusca.style.display = "none";
+                corpoResultados.innerHTML = "";
+                return;
+            }
+
+            const filtrados = todosOsColaboradores.filter(c => {
+                if (!c) return false;
+                const bateNome = c.nomeCompleto && c.nomeCompleto.toLowerCase().includes(termo);
+                const bateTipo = c.tipo && c.tipo.toLowerCase().includes(termo);
+                const bateNacionalidade = c.nacionalidade && c.nacionalidade.toLowerCase().includes(termo);
+                return bateNome || bateTipo || bateNacionalidade;
+            });
+
+            containerPaginado.style.display = "none";
+            containerBusca.style.display = "";
+            corpoResultados.innerHTML = "";
+
+            if (filtrados.length === 0) {
+                // Atualizado colspan para 5 colunas
+                corpoResultados.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Nenhum colaborador encontrado para "${termo}".</td></tr>`;
+                return;
+            }
+
+            filtrados.forEach(colaborador => {
+                // Lógica para renderizar o badge de status idêntico ao Thymeleaf
+                const statusTexto = colaborador.ativo ? 'Ativo' : 'Inativo';
+                const badgeClasse = colaborador.ativo ? 'bg-success' : 'bg-danger';
+
+                const linhaHtml = `
+                <tr>
+                    <td>${colaborador.nomeCompleto}</td>
+                    <td>${colaborador.tipo || ''}</td>
+                    <td>${colaborador.nacionalidade || ''}</td>
+                    <td>
+                        <span class="badge ${badgeClasse}">${statusTexto}</span>
+                    </td>
+                    <td>
+                        <a href="/colaborador/editar/${colaborador.idColaborador}" class="btn btn-sm btn-outline-warning me-3">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+                corpoResultados.insertAdjacentHTML('beforeend', linhaHtml);
+            });
+        }
+
+        function limparPesquisa() {
+            const input = document.getElementById("inputPesquisa");
+            if (input.value !== "") {
+                input.value = "";
+                pesquisaGlobal();
+            }
+        }
+    </script>
 
 
 </body>
