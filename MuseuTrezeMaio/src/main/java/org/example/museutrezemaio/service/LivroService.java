@@ -31,6 +31,22 @@ public class LivroService {
                        List<Integer> colaboradoresIds,
                        List<Integer> assuntosIds) throws IOException {
 
+        // Converte strings vazias em null pois o isbn é unico e se deixar vazio ele permite salvar apenas um livro sem isbn
+        if (livro.getIsbn() != null && livro.getIsbn().trim().isEmpty()) {
+            livro.setIsbn(null);
+        }
+
+        if (livro.getIsbn() != null && !livro.getIsbn().isBlank()) {
+
+            if (livroRepository.existsByIsbnAndIdItemAcervoNot(
+                    livro.getIsbn(), livro.getIdItemAcervo())) {
+
+                throw new IllegalArgumentException(
+                        "Já existe um livro cadastrado com este ISBN."
+                );
+            }
+        }
+
         if (livroRepository.existsByCodigoLivroAndIdItemAcervoNot(
                 livro.getCodigoLivro(), livro.getIdItemAcervo())) {
             throw new IllegalArgumentException("Já existe um livro cadastrado com este código.");

@@ -5,6 +5,7 @@ import org.example.museutrezemaio.service.AssuntoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,6 +60,20 @@ public class AssuntoController {
         }
 
         return "redirect:/assunto/lista";
+    }
+
+    @PostMapping("/ajax")
+    @ResponseBody
+    public ResponseEntity<?> salvarAjax(@RequestBody Assunto assunto) {
+
+        try {
+            Assunto assuntoSalvo = assuntoService.salvar(assunto);
+            return ResponseEntity.ok(assuntoSalvo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        }
+
     }
 
     @GetMapping("/lista")

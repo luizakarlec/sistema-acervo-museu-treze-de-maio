@@ -21,11 +21,11 @@ public class AssuntoService {
         this.assuntoRepository = assuntoRepository;
     }
 
-    public void salvar(Assunto assunto) {
+    public Assunto salvar(Assunto assunto) {
         if(assuntoRepository.existsByDescricaoAndIdAssuntoNot(assunto.getDescricao(), assunto.getIdAssunto())){
              throw  new IllegalArgumentException ("Já existe um assunto cadastrado com esse descricao");
         }
-        assuntoRepository.save(assunto);
+        return assuntoRepository.save(assunto);
     }
 
     public List<Assunto> listaAssuntos() {
