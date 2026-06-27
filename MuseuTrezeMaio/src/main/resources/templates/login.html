@@ -2,39 +2,80 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — Museu Treze de Maio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <style>
         body {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f0f2f5;
+            background-color: #1e4027;
         }
         .login-card {
             width: 100%;
             max-width: 420px;
             border: none;
             border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.25);
         }
         .login-card .card-body {
             padding: 2.5rem 2rem;
+        }
+        .login-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .login-brand i {
+            font-size: 1.6rem;
+            color: #2C5B37;
         }
         .login-logo {
             font-size: 1.35rem;
             font-weight: 700;
             color: #212529;
             text-align: center;
-            margin-bottom: 0.25rem;
+            line-height: 1.2;
         }
         .login-subtitulo {
             font-size: 0.85rem;
             color: #6c757d;
             text-align: center;
             margin-bottom: 2rem;
+        }
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #344b3c;
+        }
+        .btn-museu {
+            background-color: #2C5B37;
+            border-color: #2C5B37;
+            color: #fff;
+        }
+        .btn-museu:hover {
+            background-color: #1e4027;
+            border-color: #1e4027;
+            color: #fff;
+        }
+        .voltar-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.25rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+            text-decoration: none;
+        }
+        .voltar-link:hover {
+            color: #2C5B37;
         }
     </style>
 </head>
@@ -43,17 +84,22 @@
 <div class="card login-card">
     <div class="card-body">
 
-        <div class="login-logo">Museu Treze de Maio</div>
+        <div class="login-brand">
+            <i class="bi bi-buildings"></i>
+            <span class="login-logo">Museu Treze<br>de Maio</span>
+        </div>
         <div class="login-subtitulo">Acesso ao sistema de acervo</div>
 
         <!-- Erro de autenticação (Spring Security envia ?error) -->
-        <div class="alert alert-danger py-2" th:if="${param.error}">
-            E-mail ou senha incorretos.
+        <div class="alert alert-danger py-2 d-flex align-items-center gap-2" th:if="${param.error}">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>E-mail ou senha incorretos.</span>
         </div>
 
         <!-- Mensagem de logout -->
-        <div class="alert alert-success py-2" th:if="${param.logout}">
-            Você saiu com sucesso.
+        <div class="alert alert-success py-2 d-flex align-items-center gap-2" th:if="${param.logout}">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Você saiu com sucesso.</span>
         </div>
 
         <form method="POST" th:action="@{/login}">
@@ -71,8 +117,14 @@
                        placeholder="••••••••" required>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Entrar</button>
+            <button type="submit" class="btn btn-museu w-100">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Entrar
+            </button>
         </form>
+
+        <a th:href="@{/}" class="voltar-link">
+            <i class="bi bi-arrow-left me-1"></i>Voltar para a página inicial
+        </a>
 
     </div>
 </div>

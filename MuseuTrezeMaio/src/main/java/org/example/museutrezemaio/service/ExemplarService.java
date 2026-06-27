@@ -17,7 +17,6 @@ public class ExemplarService {
         //implementar ExistsBy... antes de salvar
         exemplarRepository.save(exemplar);
 
-
     }
 
     public List<Exemplar> listar() { return exemplarRepository.findAll(); }
