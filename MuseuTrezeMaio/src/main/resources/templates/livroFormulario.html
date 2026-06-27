@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Livro | Museu Treze de Maio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        #admin-sidebar {
+            width: 260px; min-width: 260px;
+            background-color: #2C5B37;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+        .sidebar-link { color: rgba(255,255,255,.85); border-radius: 8px; display: flex; align-items: center; gap: .5rem; padding: .45rem .85rem; text-decoration: none; }
+        .sidebar-link:hover { background-color: rgba(255,255,255,.18); color: #fff; }
+        .sidebar-link.active { background-color: rgba(255,255,255,.22); color: #fff; font-weight: 600; }
+        .submenu-toggle { background: none; border: none; }
+        .submenu-link { color: rgba(255,255,255,.8); border-radius: 8px; display: flex; align-items: center; gap: .5rem; padding: .38rem .85rem .38rem 2.2rem; text-decoration: none; font-size: .88rem; }
+        .submenu-link:hover { background-color: rgba(255,255,255,.15); color: #fff; }
+        .submenu-link.active { background-color: rgba(255,255,255,.2); color: #fff; font-weight: 600; }
+        .submenu-chevron { margin-left: auto; transition: transform .25s; font-size: .75rem; }
+        .form-label { font-weight: 500; color: #495057; }
+        .required::after { content: " *"; color: #dc3545; }
+        #capaPreview {
+            max-height: 200px; max-width: 140px;
+            object-fit: cover; border-radius: 8px;
+            border: 1px solid #dee2e6; box-shadow: 0 2px 8px rgba(0,0,0,.10);
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="d-flex" style="min-height:100vh;">
+
+    <!-- SIDEBAR ADMIN -->
+    <div id="admin-sidebar" class="flex-shrink-0 p-3">
+        <a th:href="@{/}" class="d-flex align-items-center mb-3 text-white text-decoration-none gap-2">
+            <i class="bi bi-buildings fs-4"></i>
+            <span class="fs-5 fw-bold">Admin</span>
+        </a>
+        <hr style="border-color:rgba(255,255,255,.3);">
+
+        <ul class="nav flex-column mb-auto gap-1">
+            <li>
+                <a th:href="@{/admin}" class="sidebar-link">
+                    <i class="bi bi-speedometer2"></i>Painel
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/}" class="sidebar-link">
+                    <i class="bi bi-house-door"></i>Ir para o Site
+                </a>
+            </li>
+            <li><hr style="border-color:rgba(255,255,255,.2); margin:.4rem 0;"></li>
+            <li>
+                <button class="sidebar-link submenu-toggle w-100" data-bs-toggle="collapse" data-bs-target="#adminSubmenu" aria-expanded="true">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>Administração</span>
+                    <i class="bi bi-chevron-down submenu-chevron"></i>
+                </button>
+                <div class="collapse show" id="adminSubmenu">
+                    <ul class="nav flex-column gap-1 mt-1">
+                        <li><a th:href="@{/assunto/lista}"        class="submenu-link"><i class="bi bi-tags"></i>Assuntos</a></li>
+                        <li><a th:href="@{/colaborador/lista}"    class="submenu-link"><i class="bi bi-person-badge"></i>Colaboradores</a></li>
+                        <li><a th:href="@{/editora/lista}"        class="submenu-link"><i class="bi bi-building"></i>Editoras</a></li>
+                        <li><a th:href="@{/jornal/jornalLista}"   class="submenu-link"><i class="bi bi-newspaper"></i>Jornais</a></li>
+                        <li><a th:href="@{/livro/livroLista}"     class="submenu-link active"><i class="bi bi-book"></i>Livros</a></li>
+                        <li><a th:href="@{/revista/revistaLista}" class="submenu-link"><i class="bi bi-journal"></i>Revistas</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+        <hr style="border-color:rgba(255,255,255,.3); margin-top:auto;">
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle gap-2" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle fs-4"></i>
+                <span sec:authentication="name">Usuário</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark shadow">
+                <li>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="dropdown-item">
+                            <i class="bi bi-box-arrow-right me-2"></i>Sair
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="flex-grow-1">
+
+        <!-- Top bar -->
+        <div class="bg-white shadow-sm px-4 py-3 mb-4 d-flex align-items-center gap-3">
+            <a th:href="@{/livro/livroLista}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar para Livros
+            </a>
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-book me-2" style="color:#2C5B37;"></i>
+                <span th:text="${livro.idItemAcervo > 0} ? 'Editar Livro' : 'Cadastrar Livro'">Cadastrar Livro</span>
+            </h5>
+        </div>
+
+        <div class="container-fluid px-4 pb-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+
+                    <form th:action="@{/livro/salvarLivro}" th:object="${livro}" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" th:field="*{idItemAcervo}">
+                        <input type="hidden" th:field="*{tipo}">
+
+                        <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="mb-0"></p>
+                        </div>
+
+                        <div class="row g-3">
+
+                            <!-- ISBN, Código, Ano, Edição -->
+                            <div class="col-md-4">
+                                <label for="isbn" class="form-label">ISBN</label>
+                                <input type="text" class="form-control" id="isbn" th:field="*{isbn}" placeholder="Ex: 978-85-1234-567-8">
+                                <div class="text-danger small" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="codigoLivro" class="form-label required">Código do Livro</label>
+                                <input type="text" class="form-control" id="codigoLivro" th:field="*{codigoLivro}" placeholder="Ex: LIV-2024-001">
+                                <div class="text-danger small" th:if="${#fields.hasErrors('codigoLivro')}" th:errors="*{codigoLivro}"></div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="anoPublicacao" class="form-label required">Ano</label>
+                                <input type="number" class="form-control" id="anoPublicacao" th:field="*{anoPublicacao}" placeholder="2024" min="1">
+                                <div class="text-danger small" th:if="${#fields.hasErrors('anoPublicacao')}" th:errors="*{anoPublicacao}"></div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="edicao" class="form-label required">Edição</label>
+                                <input type="text" class="form-control" id="edicao" th:field="*{edicao}" placeholder="1ª">
+                                <div class="text-danger small" th:if="${#fields.hasErrors('edicao')}" th:errors="*{edicao}"></div>
+                            </div>
+
+                            <!-- Título e Subtítulo -->
+                            <div class="col-md-8">
+                                <label for="titulo" class="form-label required">Título</label>
+                                <input type="text" class="form-control" id="titulo" th:field="*{titulo}" placeholder="Título principal do livro">
+                                <div class="text-danger small" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="subtitulo" class="form-label">Subtítulo</label>
+                                <input type="text" class="form-control" id="subtitulo" th:field="*{subtitulo}" placeholder="Subtítulo (opcional)">
+                            </div>
+
+                            <!-- Descrição -->
+                            <div class="col-12">
+                                <label for="descricao" class="form-label">Descrição / Resumo</label>
+                                <textarea class="form-control" id="descricao" th:field="*{descricao}" rows="3" placeholder="Breve descrição do conteúdo do livro..."></textarea>
+                            </div>
+
+                            <!-- Páginas, Localização, Idioma -->
+                            <div class="col-md-2">
+                                <label for="numeroPaginas" class="form-label">Nº de Páginas</label>
+                                <input type="number" class="form-control" id="numeroPaginas" th:field="*{numeroPaginas}" placeholder="0" min="0">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="localizacaoAcervo" class="form-label required">Localização no Acervo</label>
+                                <input type="text" class="form-control" id="localizacaoAcervo" th:field="*{localizacaoAcervo}" placeholder="Ex: Estante A - Prateleira 3">
+                                <div class="text-danger small" th:if="${#fields.hasErrors('localizacaoAcervo')}" th:errors="*{localizacaoAcervo}"></div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="idioma" class="form-label required">Idioma</label>
+                                <input type="text" class="form-control" id="idioma" th:field="*{idioma}" placeholder="Ex: Português">
+                                <div class="text-danger small" th:if="${#fields.hasErrors('idioma')}" th:errors="*{idioma}"></div>
+                            </div>
+
+                            <!-- Ilustrado e Ativo -->
+                            <div class="col-md-2 d-flex align-items-end pb-1">
+                                <div>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="ilustrado" th:field="*{ilustrado}">
+                                        <label class="form-check-label" for="ilustrado">Ilustrado</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="ativo" th:field="*{ativo}">
+                                        <label class="form-check-label" for="ativo">Ativo</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Editora -->
+                            <div class="col-md-6">
+                                <label for="editora" class="form-label">Editora</label>
+                                <select id="editora" class="form-select" th:field="*{editora}">
+                                    <option value="">Selecione uma editora...</option>
+                                    <option th:each="ed : ${listaEditoras}"
+                                            th:value="${ed.idEditora}"
+                                            th:text="${ed.nome}"></option>
+                                </select>
+                            </div>
+
+                            <!-- Upload da Capa com Preview -->
+                            <div class="col-md-6">
+                                <label for="fileCapa" class="form-label">Capa do Livro</label>
+                                <input type="file" id="fileCapa" name="fileCapa" class="form-control" accept="image/*">
+                                <small class="text-muted d-block mt-1">Formatos: JPG, PNG (máx. 2MB)</small>
+
+                                <div th:if="${livro.capa != null and livro.capa.length > 0}" class="mt-2">
+                                    <p class="text-muted small mb-1">
+                                        <i class="bi bi-file-earmark-image me-1"></i>Capa atual:
+                                    </p>
+                                    <img th:src="@{/livro/capa/{id}(id=${livro.idItemAcervo})}"
+                                         id="capaPreview" alt="Capa do livro">
+                                </div>
+                                <div th:unless="${livro.capa != null and livro.capa.length > 0}" class="mt-2">
+                                    <img id="capaPreview" src="#" alt="Preview da capa" style="display:none;">
+                                </div>
+                            </div>
+
+                            <!-- Colaboradores (multi-select) -->
+                            <div class="col-md-6">
+                                <label for="colaboradoresIds" class="form-label">Colaboradores</label>
+                                <select id="colaboradoresIds" name="colaboradoresIds" class="form-select" multiple size="5">
+                                    <option th:each="col : ${listaColaboradores}"
+                                            th:value="${col.idColaborador}"
+                                            th:text="${col.nome + ' ' + col.sobrenome + ' (' + col.tipo + ')'}"
+                                            th:selected="${selectedColaboradoresIds.contains(col.idColaborador)}">
+                                    </option>
+                                </select>
+                                <small class="text-muted">
+                                    Segure <kbd>Ctrl</kbd> (ou <kbd>⌘</kbd>) para selecionar múltiplos.
+                                </small>
+                            </div>
+
+                            <!-- Assuntos (multi-select) -->
+                            <div class="col-md-6">
+                                <label for="assuntosIds" class="form-label">Assuntos</label>
+                                <select id="assuntosIds" name="assuntosIds" class="form-select" multiple size="5">
+                                    <option th:each="as : ${listaAssuntos}"
+                                            th:value="${as.idAssunto}"
+                                            th:text="${as.descricao}"
+                                            th:selected="${selectedAssuntosIds.contains(as.idAssunto)}">
+                                    </option>
+                                </select>
+                                <small class="text-muted">
+                                    Segure <kbd>Ctrl</kbd> (ou <kbd>⌘</kbd>) para selecionar múltiplos.
+                                </small>
+                            </div>
+
+                            <!-- Notas -->
+                            <div class="col-12">
+                                <label for="notas" class="form-label">Notas</label>
+                                <textarea class="form-control" id="notas" th:field="*{notas}" rows="2"
+                                          placeholder="Notas internas sobre este exemplar..."></textarea>
+                            </div>
+
+                            <!-- Visibilidade e Status -->
+                            <div class="col-md-6">
+                                <label class="form-label d-block mb-2">Visibilidade</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                           id="visibilidadeNotas" th:field="*{visibilidadeNotas}">
+                                    <label class="form-check-label" for="visibilidadeNotas">
+                                        Notas visíveis para usuários
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 text-md-end">
+                                <label class="form-label d-block mb-2 required">Status do Item</label>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" id="statusAtivo" th:field="*{status}" value="Ativo">
+                                    <label class="btn btn-outline-success" for="statusAtivo">Ativo</label>
+
+                                    <input type="radio" class="btn-check" id="statusInativo" th:field="*{status}" value="Inativo">
+                                    <label class="btn btn-outline-danger" for="statusInativo">Inativo</label>
+
+                                    <input type="radio" class="btn-check" id="statusRestauracao" th:field="*{status}" value="Restauração">
+                                    <label class="btn btn-outline-warning" for="statusRestauracao">Restauração</label>
+                                </div>
+                                <div class="text-danger small mt-1"
+                                     th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a th:href="@{/livro/livroLista}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Voltar para Lista
+                            </a>
+                            <div class="d-flex gap-2">
+                                <button type="reset" class="btn btn-light border">
+                                    <i class="bi bi-eraser me-2"></i>Limpar
+                                </button>
+                                <button type="submit" class="btn text-white px-4" style="background-color:#2C5B37;">
+                                    <i class="bi bi-save me-2"></i>
+                                    <span th:text="${livro.idItemAcervo > 0} ? 'Atualizar Livro' : 'Cadastrar Livro'">
+                                        Cadastrar Livro
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script>
+    document.getElementById('fileCapa').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('capaPreview');
+        if (file && preview) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+</body>
+</html>

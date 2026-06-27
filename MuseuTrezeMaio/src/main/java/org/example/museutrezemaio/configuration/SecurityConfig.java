@@ -18,8 +18,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index", "/login", "/css/**", "/js/**", "/images/**").permitAll()
-                        //.requestMatchers("/adminpanel").hasAuthority("ADMIN")
+                        .requestMatchers("/", "/index", "/login", "/pesquisa", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/admin").hasAnyAuthority("ADMIN", "BIBLIOTECARIO")
 
                         // Qualquer outra rota não listada acima vai exigir autenticação
                         //.anyRequest().authenticated()
