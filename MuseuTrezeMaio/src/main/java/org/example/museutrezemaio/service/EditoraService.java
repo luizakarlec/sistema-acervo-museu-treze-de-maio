@@ -21,7 +21,7 @@ public class EditoraService {
         this.editoraRepository = editoraRepository;
     }
 
-    public void salvar(Editora editora){
+    public Editora salvar(Editora editora){
         Localizacao loc = editora.getLocalizacao();
 
         String cidade = loc.getCidade();
@@ -38,7 +38,7 @@ public class EditoraService {
             throw new IllegalArgumentException("Já existe uma editora cadastrada com esse nome e localização");
         }
 
-        editoraRepository.save(editora);
+        return editoraRepository.save(editora);
     }
 
 
