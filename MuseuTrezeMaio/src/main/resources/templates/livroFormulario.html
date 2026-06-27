@@ -196,14 +196,31 @@
                             </div>
 
                             <!-- Editora -->
+<!--                            <div class="col-md-6">-->
+<!--                                <label for="editora" class="form-label">Editora</label>-->
+<!--                                <select id="editora" class="form-select" th:field="*{editora}">-->
+<!--                                    <option value="">Selecione uma editora...</option>-->
+<!--                                    <option th:each="ed : ${listaEditoras}"-->
+<!--                                            th:value="${ed.idEditora}"-->
+<!--                                            th:text="${ed.nome}"></option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+
                             <div class="col-md-6">
                                 <label for="editora" class="form-label">Editora</label>
-                                <select id="editora" class="form-select" th:field="*{editora}">
-                                    <option value="">Selecione uma editora...</option>
-                                    <option th:each="ed : ${listaEditoras}"
-                                            th:value="${ed.idEditora}"
-                                            th:text="${ed.nome}"></option>
-                                </select>
+                                <div class="input-group">
+                                    <select id="editora" class="form-select" th:field="*{editora}">
+                                        <option value="">Selecione uma editora...</option>
+                                        <option th:each="ed : ${listaEditoras}"
+                                                th:value="${ed.idEditora}"
+                                                th:text="${ed.nome}">
+                                        </option>
+                                    </select>
+
+                                    <button type="button" class="btn text-white" style="background:#2C5B37" data-bs-toggle="modal" data-bs-target="#modalEditora">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Upload da Capa com Preview -->
@@ -356,6 +373,7 @@
     });
 </script>
 <script>
+    //pou-up para salvar um novo assunto
     async function salvarAssunto(){
         const descricao = document.getElementById("descricaoAssunto").value;
         const ativo = document.getElementById("ativoAssunto").checked;
@@ -402,6 +420,64 @@
             document.getElementById("modalAssunto")
         ).hide();
     }
+
+    /*pou-up para salvar uma nova editora*/
+    async function salvarEditora() {
+        const nome = document.getElementById("nomeEditora").value;
+        const cidade = document.getElementById("cidadeEditora").value;
+        const estado = document.getElementById("estadoEditora").value;
+        const ativo = document.getElementById("ativoEditora").checked;
+        const erro = document.getElementById("erroEditora");
+
+        erro.innerHTML = "";
+
+        if (nome.trim() === "") {
+            erro.innerHTML = "Informe o nome da editora.";
+            return;
+        }
+
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+        const response = await fetch("/editora/ajax", {
+
+            method: "POST",
+            headers: {"Content-Type": "application/json", [header]: token},
+
+            body: JSON.stringify({
+                nome: nome,
+                ativo: ativo,
+                localizacao: {
+                    cidade: cidade,
+                    estado: estado
+                }
+            })
+
+        });
+
+        if (!response.ok) {erro.innerHTML = await response.text();
+            return;
+        }
+        const editora = await response.json();
+        adicionarEditoraNoSelect(editora);
+    }
+    function adicionarEditoraNoSelect(editora) {
+        const select = document.getElementById("editora");
+        const option = document.createElement("option");
+        option.value = editora.idEditora;
+        option.text = editora.nome;
+        option.selected = true;
+        select.appendChild(option);
+        document.getElementById("nomeEditora").value = "";
+        document.getElementById("cidadeEditora").value = "";
+        document.getElementById("estadoEditora").value = "";
+        document.getElementById("ativoEditora").checked = true;
+        document.getElementById("erroEditora").innerHTML = "";
+        bootstrap.Modal.getInstance(
+            document.getElementById("modalEditora")
+        ).hide();
+    }
+
 </script>
 
 <div class="modal fade" id="modalAssunto" tabindex="-1">
@@ -436,6 +512,49 @@
 
                 <button class="btn text-white" style="background:#2C5B37" onclick="salvarAssunto()">Salvar</button>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Editora -->
+<div class="modal fade" id="modalEditora" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Nova Editora</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditora">
+                    <div class="mb-3">
+                        <label class="form-label">Nome</label>
+                        <input type="text" id="nomeEditora" class="form-control">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cidade</label>
+                            <input type="text" id="cidadeEditora" class="form-control">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Estado</label>
+                            <input type="text" id="estadoEditora" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="ativoEditora" checked>
+                        <label class="form-check-label">Ativo</label>
+                    </div>
+                </form>
+
+                <div id="erroEditora" class="text-danger mt-2"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn text-white" style="background:#2C5B37" onclick="salvarEditora()">Salvar</button>
+            </div>
+
         </div>
     </div>
 </div>
