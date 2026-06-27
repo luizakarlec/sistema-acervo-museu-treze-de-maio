@@ -32,9 +32,11 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" th:href="@{/}"><i class="bi bi-house-door me-1"></i>Início</a>
                 </li>
+                <!--
                 <li class="nav-item">
                     <a class="nav-link text-white fw-semibold" th:href="@{/pesquisa}"><i class="bi bi-search me-1"></i>Pesquisar</a>
                 </li>
+                -->
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','BIBLIOTECARIO')">
                     <a class="nav-link text-white" th:href="@{/admin}"><i class="bi bi-gear me-1"></i>Administração</a>
                 </li>

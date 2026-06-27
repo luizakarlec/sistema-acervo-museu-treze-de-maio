@@ -102,6 +102,7 @@
                                 <i class="bi bi-journal"></i>Revistas
                             </a>
                         </li>
+                        <li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/usuario/usuarioLista}" class="submenu-link active"><i class="bi bi-people"></i>Usuários</a></li>
                     </ul>
                 </div>
             </li>

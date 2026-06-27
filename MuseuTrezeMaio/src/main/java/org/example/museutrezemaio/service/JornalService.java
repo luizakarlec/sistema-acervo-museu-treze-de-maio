@@ -34,6 +34,7 @@ public class JornalService {
     public List<Jornal> listaJornais(){
         return jornalRepository.findAll();
     }
+
     public Optional<Jornal> EditarId(Integer id){
         return jornalRepository.findById(id);
     }
