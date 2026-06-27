@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -121,7 +124,20 @@ public class LivroController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        String mimeType = null;
+        try (InputStream is = new ByteArrayInputStream(capa)) {
+            mimeType = URLConnection.guessContentTypeFromStream(is);
+        } catch (Exception e) {
+
+        }
+
+        if (mimeType != null) {
+            headers.setContentType(MediaType.parseMediaType(mimeType));
+        } else {
+            headers.setContentType(MediaType.IMAGE_JPEG); // Fallback caso não consiga identificar
+        }
+
         return new ResponseEntity<>(capa, headers, HttpStatus.OK);
     }
 
