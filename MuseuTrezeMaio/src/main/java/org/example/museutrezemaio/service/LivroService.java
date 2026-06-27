@@ -1,0 +1,68 @@
+package org.example.museutrezemaio.service;
+
+import org.example.museutrezemaio.model.Livro;
+import org.example.museutrezemaio.repository.AssuntoRepository;
+import org.example.museutrezemaio.repository.ColaboradorRepository;
+import org.example.museutrezemaio.repository.LivroRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class LivroService {
+
+    private final LivroRepository livroRepository;
+    private final ColaboradorRepository colaboradorRepository;
+    private final AssuntoRepository assuntoRepository;
+
+    public LivroService(LivroRepository livroRepository,
+                        ColaboradorRepository colaboradorRepository,
+                        AssuntoRepository assuntoRepository) {
+        this.livroRepository = livroRepository;
+        this.colaboradorRepository = colaboradorRepository;
+        this.assuntoRepository = assuntoRepository;
+    }
+
+    public void salvar(Livro livro, MultipartFile fileCapa,
+                       List<Integer> colaboradoresIds,
+                       List<Integer> assuntosIds) throws IOException {
+
+        if (livroRepository.existsByCodigoLivroAndIdItemAcervoNot(
+                livro.getCodigoLivro(), livro.getIdItemAcervo())) {
+            throw new IllegalArgumentException("Já existe um livro cadastrado com este código.");
+        }
+
+        livro.setColaboradores(colaboradoresIds != null && !colaboradoresIds.isEmpty()
+                ? colaboradorRepository.findAllById(colaboradoresIds)
+                : new ArrayList<>());
+
+        livro.setAssuntos(assuntosIds != null && !assuntosIds.isEmpty()
+                ? assuntoRepository.findAllById(assuntosIds)
+                : new ArrayList<>());
+
+        if (!fileCapa.isEmpty()) {
+            livro.setCapa(fileCapa.getBytes());
+        } else if (livro.getIdItemAcervo() != 0) {
+            livroRepository.findById(livro.getIdItemAcervo())
+                    .ifPresent(livroExistente -> livro.setCapa(livroExistente.getCapa()));
+        }
+
+        livroRepository.save(livro);
+    }
+
+    public List<Livro> listarLivros() {
+        return livroRepository.findAll();
+    }
+
+    public Optional<Livro> editarId(Integer id) {
+        return livroRepository.findById(id);
+    }
+
+    public void excluir(int id) {
+        livroRepository.deleteById(id);
+    }
+}

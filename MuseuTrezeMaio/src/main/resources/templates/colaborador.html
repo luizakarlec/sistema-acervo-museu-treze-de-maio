@@ -1,177 +1,191 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Colaborador</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colaboradores | Museu Treze de Maio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
+    <style>
+        #admin-sidebar {
+            width: 260px; min-width: 260px;
+            background-color: #2C5B37;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+        .sidebar-link { color: rgba(255,255,255,.85); border-radius: 8px; display: flex;
+                        align-items: center; gap: .5rem; padding: .45rem .85rem; text-decoration: none; }
+        .sidebar-link:hover { background-color: rgba(255,255,255,.18); color: #fff; }
+        .sidebar-link.active { background-color: rgba(255,255,255,.22); color: #fff; font-weight: 600; }
+        .submenu-toggle { background: none; border: none; }
+        .submenu-link { color: rgba(255,255,255,.8); border-radius: 8px; display: flex; align-items: center;
+                        gap: .5rem; padding: .38rem .85rem .38rem 2.2rem; text-decoration: none; font-size: .88rem; }
+        .submenu-link:hover { background-color: rgba(255,255,255,.15); color: #fff; }
+        .submenu-link.active { background-color: rgba(255,255,255,.2); color: #fff; font-weight: 600; }
+        .submenu-chevron { margin-left: auto; transition: transform .25s; font-size: .75rem; }
+    </style>
 </head>
-<body>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-lg-8">
-                <!-- Formulario -->
-                <div class="card card-hover border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <h4 class="fw-bold mb-4">
-                            <i class="bi bi-person-badge me-2" style="color: #2C5B37;"></i>
-                            Cadastro de Colaborador
-                        </h4>
+<body class="bg-light">
+<div class="d-flex" style="min-height:100vh;">
 
-                        <div th:if="${mensagemSucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <!-- ═══ SIDEBAR ADMIN ═══ -->
+    <div id="admin-sidebar" class="flex-shrink-0 p-3">
+        <a th:href="@{/}" class="d-flex align-items-center mb-3 text-white text-decoration-none gap-2">
+            <i class="bi bi-buildings fs-4"></i>
+            <span class="fs-5 fw-bold">Admin</span>
+        </a>
+        <hr style="border-color:rgba(255,255,255,.3);">
 
-                            <i class="bi bi-check-circle-fill me-2"></i><span th:text="${mensagemSucesso}"></span>
-
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-
-                        <form method="POST" th:action="@{/colaborador/salvarColaborador}" th:object="${colaborador}">
-                            <input type="hidden" th:field="*{idColaborador}">
-
-                            <div class="alert alert-danger"
-                                 th:if="${#fields.hasGlobalErrors()}">
-                                <p th:each="err : ${#fields.globalErrors()}"
-                                   th:text="${err}"></p>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="nome" class="form-label">Nome <span class="text-danger">*</span> </label>
-                                    <input type="text" id="nome" class="form-control" placeholder="Digite o nome" th:field="*{nome}">
-                                    <div class="text-danger"
-                                         th:if="${#fields.hasErrors('nome')}"
-                                         th:errors="*{nome}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="sobrenome" class="form-label">Sobrenome <span class="text-danger">*</span> </label>
-                                    <input type="text" id="sobrenome" class="form-control" placeholder="Digite o nome" th:field="*{sobrenome}">
-                                    <div class="text-danger"
-                                         th:if="${#fields.hasErrors('sobrenome')}"
-                                         th:errors="*{sobrenome}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="tipo" class="form-label">Tipo <span class="text-danger">*</span> </label>
-                                    <select id="tipo" class="form-select"  th:field="*{tipo}">
-                                        <option value="" >Selecione o tipo</option>
-                                        <option value="Autor">Autor</option>
-                                        <option value="Colaborador">Colaborador</option>
-                                        <option value="Editor">Editor</option>
-                                        <option value="Ilustrador">Ilustrador</option>
-                                        <option value="Organizador">Organizador</option>
-                                        <option value="Tradutor">Tradutor</option>
-                                        <option value="Outro">Outro</option>
-                                    </select>
-                                    <div class="text-danger"
-                                         th:if="${#fields.hasErrors('tipo')}"
-                                         th:errors="*{tipo}">
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="nacionalidade" class="form-label">Nacionalidade </label>
-                                    <input type="text" id="nacionalidade" class="form-control" placeholder="Digite a nacionalidade " th:field="*{nacionalidade}">
-
-                                </div>
-
-                                <div class="col-md-4 mb-3 d-flex align-items-center">
-                                    <div class="form-check form-switch mt-4">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="ativo" th:field="*{ativo}" checked>
-                                        <label class="form-check-label" for="ativo">Ativo</label>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <hr class="my-4">
-                            <div class="d-flex gap-2">
-                                    <button type="submit" class="btn text-white" style="background-color: #2C5B37 "> <i class="bi bi-save me-2"></i> Salvar</button>
-                                    <a th:href="@{/editora/lista}" class="btn btn-outline-secondary"><i class="bi bi-x-circle me-2"></i>Cancelar</a>
-                            </div>
-                        </form>
-                    </div>
+        <ul class="nav flex-column mb-auto gap-1">
+            <li>
+                <a th:href="@{/admin}" class="sidebar-link">
+                    <i class="bi bi-speedometer2"></i>Painel
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/}" class="sidebar-link">
+                    <i class="bi bi-house-door"></i>Ir para o Site
+                </a>
+            </li>
+            <li><hr style="border-color:rgba(255,255,255,.2); margin:.4rem 0;"></li>
+            <li>
+                <button class="sidebar-link submenu-toggle w-100"
+                        data-bs-toggle="collapse" data-bs-target="#adminSubmenu" aria-expanded="true">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>Administração</span>
+                    <i class="bi bi-chevron-down submenu-chevron"></i>
+                </button>
+                <div class="collapse show" id="adminSubmenu">
+                    <ul class="nav flex-column gap-1 mt-1">
+                        <li><a th:href="@{/assunto/lista}"        class="submenu-link"><i class="bi bi-tags"></i>Assuntos</a></li>
+                        <li><a th:href="@{/colaborador/lista}"    class="submenu-link active"><i class="bi bi-person-badge"></i>Colaboradores</a></li>
+                        <li><a th:href="@{/editora/lista}"        class="submenu-link"><i class="bi bi-building"></i>Editoras</a></li>
+                        <li><a th:href="@{/jornal/jornalLista}"   class="submenu-link"><i class="bi bi-newspaper"></i>Jornais</a></li>
+                        <li><a th:href="@{/livro/livroLista}"     class="submenu-link"><i class="bi bi-book"></i>Livros</a></li>
+                        <li><a th:href="@{/revista/revistaLista}" class="submenu-link"><i class="bi bi-journal"></i>Revistas</a></li>
+                    </ul>
                 </div>
+            </li>
+        </ul>
 
+        <hr style="border-color:rgba(255,255,255,.3); margin-top:auto;">
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle gap-2"
+               data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle fs-4"></i>
+                <span sec:authentication="name">Usuário</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark shadow">
+                <li>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="dropdown-item">
+                            <i class="bi bi-box-arrow-right me-2"></i>Sair
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-                <!-- Lista de Colaboradores -->
-                <div class="card card-hover border-0 shadow-sm mt-4">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="fw-bold mb-0">
-                                Colaboradores Cadastrados
-                            </h5>
-                            <div style="max-width: 350px; width: 100%;">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" id="inputPesquisa" oninput="pesquisaGlobal()" class="form-control" placeholder="Pesquisar por nome, tipo ou nacionalidade...">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="limparPesquisa()" title="Limpar pesquisa">
-                                        <i class="bi bi-x-lg"></i>
-                                    </button>
+    <!-- ═══ CONTEÚDO ═══ -->
+    <div class="flex-grow-1">
+
+        <!-- Top bar -->
+        <div class="bg-white shadow-sm px-4 py-3 mb-4 d-flex align-items-center gap-3">
+            <a th:href="@{/admin}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar ao Painel
+            </a>
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-person-badge me-2" style="color:#2C5B37;"></i>Colaboradores
+            </h5>
+        </div>
+
+        <div class="container-fluid px-4 pb-5">
+
+            <!-- Formulário -->
+            <div class="card card-hover border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-4">
+                        <i class="bi bi-person-badge me-2" style="color: #2C5B37;"></i>
+                        Cadastro de Colaborador
+                    </h4>
+
+                    <div th:if="${mensagemSucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i><span th:text="${mensagemSucesso}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    <form method="POST" th:action="@{/colaborador/salvarColaborador}" th:object="${colaborador}">
+                        <input type="hidden" th:field="*{idColaborador}">
+
+                        <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label">Nome <span class="text-danger">*</span></label>
+                                <input type="text" id="nome" class="form-control" placeholder="Digite o nome" th:field="*{nome}">
+                                <div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="sobrenome" class="form-label">Sobrenome <span class="text-danger">*</span></label>
+                                <input type="text" id="sobrenome" class="form-control" placeholder="Digite o sobrenome" th:field="*{sobrenome}">
+                                <div class="text-danger" th:if="${#fields.hasErrors('sobrenome')}" th:errors="*{sobrenome}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tipo" class="form-label">Tipo <span class="text-danger">*</span></label>
+                                <select id="tipo" class="form-select" th:field="*{tipo}">
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="Autor">Autor</option>
+                                    <option value="Colaborador">Colaborador</option>
+                                    <option value="Editor">Editor</option>
+                                    <option value="Ilustrador">Ilustrador</option>
+                                    <option value="Organizador">Organizador</option>
+                                    <option value="Tradutor">Tradutor</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                                <div class="text-danger" th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="nacionalidade" class="form-label">Nacionalidade</label>
+                                <input type="text" id="nacionalidade" class="form-control" placeholder="Digite a nacionalidade" th:field="*{nacionalidade}">
+                            </div>
+                            <div class="col-md-4 mb-3 d-flex align-items-center">
+                                <div class="form-check form-switch mt-4">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="ativo" th:field="*{ativo}" checked>
+                                    <label class="form-check-label" for="ativo">Ativo</label>
                                 </div>
                             </div>
                         </div>
-
-
-                        <div class="table-responsive" id="containerTabelaPaginada">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Nome Completo</th>
-                                        <th>Tipo</th>
-                                        <th>Nacionalidade</th>
-                                        <th>Status</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="colaborador :${paginaColaboradores.content}">
-                                        <td th:text="${colaborador.nome + ' ' + colaborador.sobrenome}"></td>
-                                        <td th:text="${colaborador.tipo}"></td>
-                                        <td th:text="${colaborador.nacionalidade}"></td>
-                                        <td>
-                                             <span th:if="${colaborador.ativo}" class="badge bg-success">Ativo</span>
-                                             <span th:unless="${colaborador.ativo}" class="badge bg-danger">Inativo</span>
-                                        </td>
-                                        <td>
-                                            <a th:href="@{/colaborador/editar/{idColaborador}(idColaborador=${colaborador.idColaborador})}"
-                                               class="btn btn-sm btn-outline-warning me-3"> <i class="bi bi-pencil"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <nav th:if="${paginaColaboradores.totalPages > 1}">
-                                <ul class="pagination justify-content-center mt-3">
-
-                                    <li class="page-item" th:classappend="${paginaColaboradores.first} ? 'disabled'">
-                                        <a class="page-link " th:href="@{/colaborador/lista(page=${paginaColaboradores.number - 1})}">
-                                            Anterior
-                                        </a>
-                                    </li>
-
-                                    <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaColaboradores.totalPages - 1)}"
-                                        th:classappend="${i == paginaColaboradores.number} ? 'active'">
-                                        <a class="page-link" th:text="${i + 1}" th:href="@{/colaborador/lista(page=${i})}"></a>
-                                    </li>
-
-                                    <li class="page-item"
-                                        th:classappend="${paginaColaboradores.last} ? 'disabled'">
-                                        <a class="page-link" th:href="@{/colaborador/lista(page=${paginaColaboradores.number + 1})}">
-                                            Próxima
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                        <hr class="my-4">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn text-white" style="background-color: #2C5B37"><i class="bi bi-save me-2"></i>Salvar</button>
+                            <a th:href="@{/colaborador/lista}" class="btn btn-outline-secondary"><i class="bi bi-x-circle me-2"></i>Cancelar</a>
                         </div>
+                    </form>
+                </div>
+            </div>
 
-                    <!-- 2. CONTAINER DA TABELA DE BUSCA GLOBAL (Inicia oculta) -->
-                        <div class="table-responsive" id="containerTabelaBusca" style="display: none;">
-                            <table class="table table-hover">
-                                <thead>
+            <!-- Lista de Colaboradores -->
+            <div class="card card-hover border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Colaboradores Cadastrados</h5>
+                        <div style="max-width: 350px; width: 100%;">
+                            <div class="input-group input-group-sm">
+                                <input type="text" id="inputPesquisa" oninput="pesquisaGlobal()" class="form-control" placeholder="Pesquisar por nome, tipo ou nacionalidade...">
+                                <button class="btn btn-outline-secondary" type="button" onclick="limparPesquisa()" title="Limpar pesquisa">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive" id="containerTabelaPaginada">
+                        <table class="table table-hover">
+                            <thead>
                                 <tr>
                                     <th>Nome Completo</th>
                                     <th>Tipo</th>
@@ -179,116 +193,146 @@
                                     <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
-                                </thead>
-                                <tbody id="corpoResultadosBusca">
-                                <!-- Linhas geradas dinamicamente pelo JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
+                            </thead>
+                            <tbody>
+                                <tr th:each="colaborador :${paginaColaboradores.content}">
+                                    <td th:text="${colaborador.nome + ' ' + colaborador.sobrenome}"></td>
+                                    <td th:text="${colaborador.tipo}"></td>
+                                    <td th:text="${colaborador.nacionalidade}"></td>
+                                    <td>
+                                        <span th:if="${colaborador.ativo}" class="badge bg-success">Ativo</span>
+                                        <span th:unless="${colaborador.ativo}" class="badge bg-danger">Inativo</span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/colaborador/editar/{idColaborador}(idColaborador=${colaborador.idColaborador})}"
+                                           class="btn btn-sm btn-outline-warning me-3"><i class="bi bi-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
+                        <nav th:if="${paginaColaboradores.totalPages > 1}">
+                            <ul class="pagination justify-content-center mt-3">
+                                <li class="page-item" th:classappend="${paginaColaboradores.first} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/colaborador/lista(page=${paginaColaboradores.number - 1})}">Anterior</a>
+                                </li>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaColaboradores.totalPages - 1)}"
+                                    th:classappend="${i == paginaColaboradores.number} ? 'active'">
+                                    <a class="page-link" th:text="${i + 1}" th:href="@{/colaborador/lista(page=${i})}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="${paginaColaboradores.last} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/colaborador/lista(page=${paginaColaboradores.number + 1})}">Próxima</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
 
+                    <div class="table-responsive" id="containerTabelaBusca" style="display: none;">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nome Completo</th>
+                                    <th>Tipo</th>
+                                    <th>Nacionalidade</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpoResultadosBusca"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
+</div>
 
-    <!-- 3. CARREGAMENTO DOS DADOS NO HTML OCULTO -->
-    <div id="dados-colaboradores-armazenados" style="display: none;">
-        <div class="dado-colaborador-item"
-             th:each="colaborador : ${todosColaboradores}"
-             th:data-id="${colaborador.idColaborador}"
-             th:data-nome-completo="${colaborador.nome} + ' ' + ${colaborador.sobrenome}"
-             th:data-tipo="${colaborador.tipo}"
-             th:data-nacionalidade="${colaborador.nacionalidade}"
-             th:data-ativo="${colaborador.ativo}">
-        </div>
+<!-- Dados ocultos para busca -->
+<div id="dados-colaboradores-armazenados" style="display: none;">
+    <div class="dado-colaborador-item"
+         th:each="colaborador : ${todosColaboradores}"
+         th:data-id="${colaborador.idColaborador}"
+         th:data-nome-completo="${colaborador.nome} + ' ' + ${colaborador.sobrenome}"
+         th:data-tipo="${colaborador.tipo}"
+         th:data-nacionalidade="${colaborador.nacionalidade}"
+         th:data-ativo="${colaborador.ativo}">
     </div>
+</div>
 
-    <!-- 4. SCRIPT DE FILTRAGEM DINÂMICA MULTI-CAMPO -->
-    <script>
-        let todosOsColaboradores = [];
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script>
+    let todosOsColaboradores = [];
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const elementosDados = document.querySelectorAll(".dado-colaborador-item");
-
-            elementosDados.forEach(elemento => {
-                todosOsColaboradores.push({
-                    idColaborador: elemento.getAttribute("data-id"),
-                    nomeCompleto: elemento.getAttribute("data-nome-completo"),
-                    tipo: elemento.getAttribute("data-tipo"),
-                    nacionalidade: elemento.getAttribute("data-nacionalidade"),
-                    ativo: elemento.getAttribute("data-ativo") === "true"
-                });
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".dado-colaborador-item").forEach(elemento => {
+            todosOsColaboradores.push({
+                idColaborador: elemento.getAttribute("data-id"),
+                nomeCompleto: elemento.getAttribute("data-nome-completo"),
+                tipo: elemento.getAttribute("data-tipo"),
+                nacionalidade: elemento.getAttribute("data-nacionalidade"),
+                ativo: elemento.getAttribute("data-ativo") === "true"
             });
+        });
+    });
 
-            console.log("Busca digital inicializada com " + todosOsColaboradores.length + " colaboradores.");
+    function pesquisaGlobal() {
+        const termo = document.getElementById("inputPesquisa").value.trim().toLowerCase();
+        const containerPaginado = document.getElementById("containerTabelaPaginada");
+        const containerBusca = document.getElementById("containerTabelaBusca");
+        const corpoResultados = document.getElementById("corpoResultadosBusca");
+
+        if (termo === "") {
+            containerPaginado.style.display = "";
+            containerBusca.style.display = "none";
+            corpoResultados.innerHTML = "";
+            return;
+        }
+
+        const filtrados = todosOsColaboradores.filter(c => {
+            if (!c) return false;
+            const bateNome = c.nomeCompleto && c.nomeCompleto.toLowerCase().includes(termo);
+            const bateTipo = c.tipo && c.tipo.toLowerCase().includes(termo);
+            const bateNacionalidade = c.nacionalidade && c.nacionalidade.toLowerCase().includes(termo);
+            return bateNome || bateTipo || bateNacionalidade;
         });
 
-        function pesquisaGlobal() {
-            const termo = document.getElementById("inputPesquisa").value.trim().toLowerCase();
-            const containerPaginado = document.getElementById("containerTabelaPaginada");
-            const containerBusca = document.getElementById("containerTabelaBusca");
-            const corpoResultados = document.getElementById("corpoResultadosBusca");
+        containerPaginado.style.display = "none";
+        containerBusca.style.display = "";
+        corpoResultados.innerHTML = "";
 
-            if (termo === "") {
-                containerPaginado.style.display = "";
-                containerBusca.style.display = "none";
-                corpoResultados.innerHTML = "";
-                return;
-            }
+        if (filtrados.length === 0) {
+            corpoResultados.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Nenhum colaborador encontrado para "${termo}".</td></tr>`;
+            return;
+        }
 
-            const filtrados = todosOsColaboradores.filter(c => {
-                if (!c) return false;
-                const bateNome = c.nomeCompleto && c.nomeCompleto.toLowerCase().includes(termo);
-                const bateTipo = c.tipo && c.tipo.toLowerCase().includes(termo);
-                const bateNacionalidade = c.nacionalidade && c.nacionalidade.toLowerCase().includes(termo);
-                return bateNome || bateTipo || bateNacionalidade;
-            });
-
-            containerPaginado.style.display = "none";
-            containerBusca.style.display = "";
-            corpoResultados.innerHTML = "";
-
-            if (filtrados.length === 0) {
-                // Atualizado colspan para 5 colunas
-                corpoResultados.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Nenhum colaborador encontrado para "${termo}".</td></tr>`;
-                return;
-            }
-
-            filtrados.forEach(colaborador => {
-                // Lógica para renderizar o badge de status idêntico ao Thymeleaf
-                const statusTexto = colaborador.ativo ? 'Ativo' : 'Inativo';
-                const badgeClasse = colaborador.ativo ? 'bg-success' : 'bg-danger';
-
-                const linhaHtml = `
+        filtrados.forEach(colaborador => {
+            const badgeClasse = colaborador.ativo ? 'bg-success' : 'bg-danger';
+            const statusTexto = colaborador.ativo ? 'Ativo' : 'Inativo';
+            corpoResultados.insertAdjacentHTML('beforeend', `
                 <tr>
                     <td>${colaborador.nomeCompleto}</td>
                     <td>${colaborador.tipo || ''}</td>
                     <td>${colaborador.nacionalidade || ''}</td>
-                    <td>
-                        <span class="badge ${badgeClasse}">${statusTexto}</span>
-                    </td>
+                    <td><span class="badge ${badgeClasse}">${statusTexto}</span></td>
                     <td>
                         <a href="/colaborador/editar/${colaborador.idColaborador}" class="btn btn-sm btn-outline-warning me-3">
                             <i class="bi bi-pencil"></i>
                         </a>
                     </td>
                 </tr>
-            `;
-                corpoResultados.insertAdjacentHTML('beforeend', linhaHtml);
-            });
+            `);
+        });
+    }
+
+    function limparPesquisa() {
+        const input = document.getElementById("inputPesquisa");
+        if (input.value !== "") {
+            input.value = "";
+            pesquisaGlobal();
         }
-
-        function limparPesquisa() {
-            const input = document.getElementById("inputPesquisa");
-            if (input.value !== "") {
-                input.value = "";
-                pesquisaGlobal();
-            }
-        }
-    </script>
-
-
+    }
+</script>
 </body>
 </html>
