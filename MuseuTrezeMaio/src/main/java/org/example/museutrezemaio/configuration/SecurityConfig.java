@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index", "/login", "/pesquisa", "/jornal/detalhes/**", "/revista/detalhes/**", "/livro/detalhes/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/index", "/login", "/pesquisa", "/jornal/detalhes/**", "/revista/detalhes/**", "/livro/detalhes/**", "/jornal/capa/**", "/revista/capa/**", "/livro/capa/**", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin").hasAnyAuthority("ADMIN", "BIBLIOTECARIO")
                         .requestMatchers("/usuario/**").hasAuthority("ADMIN")
                         // Qualquer outra rota não listada acima vai exigir autenticação
