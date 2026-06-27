@@ -10,4 +10,6 @@ public interface LivroRepository extends JpaRepository<Livro, Integer> {
     boolean existsByCodigoLivroAndIdItemAcervoNot(String codigoLivro, int idItemAcervo);
 
     List<Livro> findByTituloContainingIgnoreCase(String titulo);
+
+    boolean existsByIsbnAndIdItemAcervoNot(String isbn, int idItemAcervo);
 }

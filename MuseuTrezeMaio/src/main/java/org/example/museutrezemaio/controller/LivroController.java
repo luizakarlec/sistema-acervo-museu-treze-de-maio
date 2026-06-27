@@ -70,7 +70,8 @@ public class LivroController {
             adicionarAtributosFormulario(model, toSet(colaboradoresIds), toSet(assuntosIds));
             return "livroFormulario";
         } catch (Exception e) {
-            result.reject("erro", "Erro ao processar a imagem da capa.");
+            e.printStackTrace();
+            result.reject("erro", "Ocorreu um erro inesperado ao salvar o livro. ");
             adicionarAtributosFormulario(model, toSet(colaboradoresIds), toSet(assuntosIds));
             return "livroFormulario";
         }

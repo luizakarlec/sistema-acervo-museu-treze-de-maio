@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>Cadastro de Livro | Museu Treze de Maio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -183,16 +185,12 @@
                                 <div class="text-danger small" th:if="${#fields.hasErrors('idioma')}" th:errors="*{idioma}"></div>
                             </div>
 
-                            <!-- Ilustrado e Ativo -->
+                            <!-- Ilustrado -->
                             <div class="col-md-2 d-flex align-items-end pb-1">
                                 <div>
                                     <div class="form-check form-switch mb-2">
                                         <input class="form-check-input" type="checkbox" role="switch" id="ilustrado" th:field="*{ilustrado}">
                                         <label class="form-check-label" for="ilustrado">Ilustrado</label>
-                                    </div>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="ativo" th:field="*{ativo}">
-                                        <label class="form-check-label" for="ativo">Ativo</label>
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +240,7 @@
                             </div>
 
                             <!-- Assuntos (multi-select) -->
-                            <div class="col-md-6">
+                            <!--<div class="col-md-6">
                                 <label for="assuntosIds" class="form-label">Assuntos</label>
                                 <select id="assuntosIds" name="assuntosIds" class="form-select" multiple size="5">
                                     <option th:each="as : ${listaAssuntos}"
@@ -254,7 +252,29 @@
                                 <small class="text-muted">
                                     Segure <kbd>Ctrl</kbd> (ou <kbd>⌘</kbd>) para selecionar múltiplos.
                                 </small>
+                            </div>-->
+                            <div class="col-md-6">
+                                <label for="assuntosIds" class="form-label">Assuntos </label>
+                                <div class="input-group">
+                                    <select id="assuntosIds" name="assuntosIds" class="form-select" multiple size="5">
+                                        <option
+                                                th:each="as : ${listaAssuntos}"
+                                                th:value="${as.idAssunto}"
+                                                th:text="${as.descricao}"
+                                                th:selected="${selectedAssuntosIds.contains(as.idAssunto)}">
+                                        </option>
+                                    </select>
+                                    <button
+                                            type="button" class="btn text-white" style="background:#2C5B37" data-bs-toggle="modal" data-bs-target="#modalAssunto">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                                <small class="text-muted">
+                                    Segure Ctrl para selecionar múltiplos ou clique em <b>+</b> para cadastrar um novo assunto.
+                                </small>
                             </div>
+
+
 
                             <!-- Notas -->
                             <div class="col-12">
@@ -335,5 +355,90 @@
         }
     });
 </script>
+<script>
+    async function salvarAssunto(){
+        const descricao = document.getElementById("descricaoAssunto").value;
+        const ativo = document.getElementById("ativoAssunto").checked;
+        const erro = document.getElementById("erroAssunto");
+        erro.innerHTML = "";
+        if(descricao.trim() === ""){
+            erro.innerHTML = "Informe a descrição.";
+            return;
+        }
+
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+        const response = await fetch("/assunto/ajax",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                [header]:token
+            },
+            body:JSON.stringify({
+                descricao:descricao,
+                ativo:ativo
+            })
+        });
+
+        if(!response.ok){
+            erro.innerHTML = await response.text();
+            return;
+        }
+        const assunto = await response.json();
+        adicionarAssuntoNoSelect(assunto);
+    }
+    function adicionarAssuntoNoSelect(assunto){
+        const select = document.getElementById("assuntosIds");
+        const option = document.createElement("option");
+        option.value = assunto.idAssunto;
+        option.text = assunto.descricao;
+        option.selected = true;
+        select.appendChild(option);
+        document.getElementById("descricaoAssunto").value = "";
+        document.getElementById("ativoAssunto").checked = true;
+        document.getElementById("erroAssunto").innerHTML = "";
+        bootstrap.Modal.getInstance(
+            document.getElementById("modalAssunto")
+        ).hide();
+    }
+</script>
+
+<div class="modal fade" id="modalAssunto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Assunto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formAssunto">
+                    <div class="mb-3">
+                        <label class="form-label">Descrição</label>
+
+                        <input id="descricaoAssunto" class="form-control">
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="ativoAssunto" checked>
+                        <label class="form-check-label">Ativo</label>
+                    </div>
+
+                </form>
+
+                <div id="erroAssunto" class="text-danger mt-2"></div>
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                <button class="btn text-white" style="background:#2C5B37" onclick="salvarAssunto()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
