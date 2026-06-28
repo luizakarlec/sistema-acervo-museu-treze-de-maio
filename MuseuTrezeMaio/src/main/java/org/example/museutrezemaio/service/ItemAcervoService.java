@@ -21,9 +21,13 @@ public class ItemAcervoService {
         return itemAcervoRepository.findAll();
     }
 
+    public List<ItemAcervo> listarTodosNaoInativos() {
+        return itemAcervoRepository.findByStatusNot("Inativo");
+    }
+
     @Transactional(readOnly = true)
     public List<ItemAcervo> buscar(String q, List<String> tipos, Integer assuntoId, String idioma, Integer editoraId) {
-        return itemAcervoRepository.findAll().stream()
+        return itemAcervoRepository.findByStatusNot("Inativo").stream()
                 .filter(item -> {
                     if (q != null && !q.isBlank()) {
                         String lower = q.toLowerCase().trim();

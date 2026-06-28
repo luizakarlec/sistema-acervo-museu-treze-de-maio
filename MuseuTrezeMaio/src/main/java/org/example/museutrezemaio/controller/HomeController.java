@@ -29,7 +29,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        List<ItemAcervo> todos = itemAcervoService.listarTodos();
+        List<ItemAcervo> todos = itemAcervoService.listarTodosNaoInativos();
 
         List<ItemAcervo> destaques = todos.stream()
                 .filter(i -> "Livro".equals(i.getTipo()))
@@ -72,7 +72,7 @@ public class HomeController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ItemAcervo> todos = itemAcervoService.listarTodos();
+        List<ItemAcervo> todos = itemAcervoService.listarTodosNaoInativos();
         model.addAttribute("totalLivros",   todos.stream().filter(i -> "Livro".equals(i.getTipo())).count());
         model.addAttribute("totalRevistas", todos.stream().filter(i -> "Revista".equals(i.getTipo())).count());
         model.addAttribute("totalJornais",  todos.stream().filter(i -> "Jornal".equals(i.getTipo())).count());
