@@ -9,87 +9,33 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <style>
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #1e4027;
-        }
-        .login-card {
-            width: 100%;
-            max-width: 420px;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.25);
-        }
-        .login-card .card-body {
-            padding: 2.5rem 2rem;
-        }
-        .login-brand {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .login-brand i {
-            font-size: 1.6rem;
-            color: #2C5B37;
-        }
-        .login-logo {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #212529;
-            text-align: center;
-            line-height: 1.2;
-        }
-        .login-subtitulo {
-            font-size: 0.85rem;
-            color: #6c757d;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .form-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #344b3c;
-        }
-        .btn-museu {
-            background-color: #2C5B37;
-            border-color: #2C5B37;
-            color: #fff;
-        }
-        .btn-museu:hover {
-            background-color: #1e4027;
-            border-color: #1e4027;
-            color: #fff;
-        }
-        .voltar-link {
-            display: block;
-            text-align: center;
-            margin-top: 1.25rem;
-            font-size: 0.85rem;
-            color: #6c757d;
-            text-decoration: none;
-        }
-        .voltar-link:hover {
-            color: #2C5B37;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
 </head>
 <body>
 
 <div class="card login-card">
     <div class="card-body">
 
-        <div class="login-brand">
-            <i class="bi bi-buildings"></i>
-            <span class="login-logo">Museu Treze<br>de Maio</span>
-        </div>
-        <div class="login-subtitulo">Acesso ao sistema de acervo</div>
 
+        <div class="row align-items-center mb-4">
+
+            <!-- Texto -->
+            <div class="col-8 text-center">
+                <h1 class="fw-bold mb-1">Museu Treze <br>de Maio</h1>
+                <p class="login-subtitulo mb-0">
+                    Acesso ao sistema do acervo
+                </p>
+            </div>
+
+            <!-- Logo -->
+            <div class="col-3 text-end">
+                <img th:src="@{/images/museu.jpeg}"
+                     alt="Museu Treze de Maio"
+                     class="login-logo-img">
+            </div>
+
+        </div>
         <!-- Erro de autenticação (Spring Security envia ?error) -->
         <div class="alert alert-danger py-2 d-flex align-items-center gap-2" th:if="${param.error}">
             <i class="bi bi-exclamation-triangle-fill"></i>

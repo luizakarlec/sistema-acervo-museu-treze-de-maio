@@ -46,3 +46,103 @@
     background-color: #1f4027;
     border-color: #2C5B37;
 }
+
+/*imagem do museu no menu inicial*/
+.hero{
+    min-height: 550px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-img{
+    max-height: 480px;
+    width: auto;
+    object-fit: contain;
+}
+
+
+@media (max-width: 991px){
+
+    .hero{
+        text-align: center;
+    }
+
+    .hero-img{
+        max-height: 280px;
+        margin-top: 30px;
+    }
+
+}
+
+/*pagina de login*/
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1e4027;
+}
+.login-card {
+    width: 100%;
+    max-width: 450px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+.login-card .card-body {
+    padding: 2.5rem 2rem;
+}
+.login-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.login-brand i {
+    font-size: 1.6rem;
+    color: #2C5B37;
+}
+.login-logo {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #212529;
+    text-align: center;
+    line-height: 1.2;
+}
+.login-subtitulo {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #344b3c;
+}
+.btn-museu {
+    background-color: #2C5B37;
+    border-color: #2C5B37;
+    color: #fff;
+}
+.btn-museu:hover {
+    background-color: #1e4027;
+    border-color: #1e4027;
+    color: #fff;
+}
+.voltar-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-decoration: none;
+}
+.voltar-link:hover {
+    color: #2C5B37;
+}
+.login-logo-img{
+    max-width: 120px;
+    height: auto;
+}
