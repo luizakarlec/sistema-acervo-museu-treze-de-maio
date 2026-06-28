@@ -46,3 +46,30 @@
     background-color: #1f4027;
     border-color: #2C5B37;
 }
+
+/*imagem do museu no menu inicial*/
+.hero{
+    min-height: 550px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-img{
+    max-height: 480px;
+    width: auto;
+    object-fit: contain;
+}
+
+
+@media (max-width: 991px){
+
+    .hero{
+        text-align: center;
+    }
+
+    .hero-img{
+        max-height: 280px;
+        margin-top: 30px;
+    }
+
+}

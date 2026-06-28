@@ -120,7 +120,7 @@
         </div>
 
         <!-- Hero Banner -->
-        <div class="hero py-5 px-4 px-lg-5">
+        <!--<div class="hero py-5 px-4 px-lg-5">
             <div class="text-white">
                 <h1 class="display-5 fw-bold mb-3">Museu Treze de Maio</h1>
                 <p class="lead mb-4" style="opacity:.9; max-width:600px;">
@@ -130,6 +130,32 @@
                 <a th:href="@{/pesquisa}" class="btn btn-light btn-lg shadow-sm">
                     <i class="bi bi-search me-2"></i>Explorar Acervo
                 </a>
+            </div>
+        </div>-->
+        <div class="hero py-5 px-4 px-lg-5">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 text-white">
+                        <h1 class="display-5 fw-bold mb-3">Museu Treze de Maio</h1>
+
+                        <p class="lead mb-4" style="opacity:.9; max-width:600px;">
+                            Explore nosso acervo digital com livros, revistas e jornais que
+                            preservam a história e cultura afro-brasileira.
+                        </p>
+
+                        <a th:href="@{/pesquisa}" class="btn btn-light btn-lg shadow-sm">
+                            <i class="bi bi-search me-2"></i>
+                            Explorar Acervo
+                        </a>
+                    </div>
+                    <!-- Imagem -->
+                    <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                        <img
+                                th:src="@{/images/museu_med.jpeg}"
+                                alt="Acervo do Museu Treze de Maio"
+                                class="img-fluid hero-img">
+                    </div>
+                </div>
             </div>
         </div>
 
