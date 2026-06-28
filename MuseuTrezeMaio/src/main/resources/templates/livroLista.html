@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
         #admin-sidebar {
             width: 260px; min-width: 260px;
@@ -146,7 +147,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="livro : ${listaLivros}" class="linha-livro">
+                                <tr th:each="livro : ${paginaLivros}" class="linha-livro">
                                     <td class="fw-semibold col-codigo" th:text="${livro.codigoLivro}"></td>
                                     <td>
                                         <span class="d-block fw-bold text-dark col-titulo" th:text="${livro.titulo}"></span>
@@ -182,6 +183,23 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <nav th:if="${paginaLivros.totalPages > 1}">
+                            <ul class="pagination justify-content-center mt-3">
+                                <li class="page-item" th:classappend="${paginaLivros.first} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/livro/livroLista(page=${paginaLivros.number - 1})}">Anterior</a>
+                                </li>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaLivros.totalPages - 1)}"
+                                    th:classappend="${i == paginaLivros.number} ? 'active'">
+                                    <a class="page-link" th:text="${i + 1}" th:href="@{/livro/livroLista(page=${i})}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="${paginaLivros.last} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/livro/livroLista(page=${paginaLivros.number + 1})}">Próxima</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+
+
                     </div>
 
                 </div>
