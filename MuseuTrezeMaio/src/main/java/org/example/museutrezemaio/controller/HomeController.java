@@ -65,8 +65,8 @@ public class HomeController {
         model.addAttribute("assuntoIdSelecionado", assuntoId);
         model.addAttribute("idiomaSelecionado", idioma != null ? idioma : "");
         model.addAttribute("editoraIdSelecionada", editoraId);
-        model.addAttribute("listaAssuntos", assuntoService.listaAssuntos());
-        model.addAttribute("listaEditoras", editoraService.listaEditoras());
+        model.addAttribute("listaAssuntosAtivos", assuntoService.listarAssuntosAtivos());
+        model.addAttribute("listaEditorasAtivas", editoraService.listarEditorasAtivas());
         return "pesquisa";
     }
 

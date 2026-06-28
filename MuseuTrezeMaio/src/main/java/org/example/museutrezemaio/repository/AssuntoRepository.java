@@ -11,4 +11,5 @@ public interface AssuntoRepository extends JpaRepository<Assunto,Integer> {
 
     List<Assunto> findByDescricaoContainingIgnoreCase(String descricao);
 
+    List<Assunto> findByAtivoTrueOrderByDescricaoAsc();
 }

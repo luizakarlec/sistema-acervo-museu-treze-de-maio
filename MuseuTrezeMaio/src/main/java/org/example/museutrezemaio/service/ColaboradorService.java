@@ -30,6 +30,10 @@ public class ColaboradorService {
         return colaboradorRepository.findAll(Sort.by("nome").ascending());
     }
 
+    public List<Colaborador> listarColaboradoresAtivos(){
+        return colaboradorRepository.findByAtivoTrueOrderByNomeAscSobrenomeAsc();
+    }
+
     public Page<Colaborador> listarTodosColaboradores(int page){
         return colaboradorRepository.findAll(PageRequest.of(page,15,Sort.by("nome").ascending()));
     }

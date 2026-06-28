@@ -143,9 +143,9 @@ public class LivroController {
     }
 
     private void adicionarAtributosFormulario(Model model, Set<Integer> selectedColaboradoresIds, Set<Integer> selectedAssuntosIds) {
-        model.addAttribute("listaEditoras", editoraService.listaEditoras());
-        model.addAttribute("listaColaboradores", colaboradorService.listarColaboradores());
-        model.addAttribute("listaAssuntos", assuntoService.listaAssuntos());
+        model.addAttribute("listaEditoras", editoraService.listarEditorasAtivas());
+        model.addAttribute("listaColaboradores", colaboradorService.listarColaboradoresAtivos());
+        model.addAttribute("listaAssuntos", assuntoService.listarAssuntosAtivos());
         model.addAttribute("selectedColaboradoresIds", selectedColaboradoresIds);
         model.addAttribute("selectedAssuntosIds", selectedAssuntosIds);
     }

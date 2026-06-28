@@ -47,6 +47,10 @@ public class EditoraService {
         return editoraRepository.findAll(PageRequest.of(page,15,Sort.by("nome").ascending()));
     }
 
+    public List<Editora> listarEditorasAtivas(){
+        return editoraRepository.findByAtivoTrueOrderByNomeAsc();
+    }
+
     public List<Editora> listaEditoras() {
         return editoraRepository.findAll(Sort.by("nome").ascending());
     }

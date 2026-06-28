@@ -34,7 +34,7 @@ public class RevistaController {
     @GetMapping("/revistaFormulario")
     public String exibirFormularioRevista(Model model) {
         model.addAttribute("revista",new Revista());
-        model.addAttribute("listaEditoras", editoraService.listaEditoras());
+        model.addAttribute("listaEditoras", editoraService.listarEditorasAtivas());
         return "revistaFormulario";
     }
 
