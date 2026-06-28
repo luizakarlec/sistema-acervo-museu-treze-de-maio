@@ -5,6 +5,7 @@ import org.example.museutrezemaio.service.AssuntoService;
 import org.example.museutrezemaio.service.ColaboradorService;
 import org.example.museutrezemaio.service.EditoraService;
 import org.example.museutrezemaio.service.LivroService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -84,7 +85,9 @@ public class LivroController {
     }
 
     @GetMapping("/livroLista")
-    public String livroLista(Model model) {
+    public String livroLista(@RequestParam(defaultValue = "0") int page,Model model) {
+        Page<Livro> paginaLivros = livroService.listarLivroPag(page);
+        model.addAttribute("paginaLivros", paginaLivros);
         model.addAttribute("listaLivros", livroService.listarLivros());
         return "livroLista";
     }

@@ -1,9 +1,13 @@
 package org.example.museutrezemaio.service;
 
+import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.model.Livro;
 import org.example.museutrezemaio.repository.AssuntoRepository;
 import org.example.museutrezemaio.repository.ColaboradorRepository;
 import org.example.museutrezemaio.repository.LivroRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,6 +76,11 @@ public class LivroService {
 
     public List<Livro> listarLivros() {
         return livroRepository.findAll();
+    }
+
+    public Page<Livro> listarLivroPag(int page){
+
+        return livroRepository.findAll(PageRequest.of(page,15, Sort.by("codigoLivro").ascending()));
     }
 
     public Optional<Livro> editarId(Integer id) {
