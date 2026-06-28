@@ -8,7 +8,9 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class ItemAcervo {
+public abstract class ItemAcervo {
+    @Transient
+    public abstract String getCodigoExclusivo();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int idItemAcervo;

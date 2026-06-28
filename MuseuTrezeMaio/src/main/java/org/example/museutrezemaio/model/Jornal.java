@@ -62,4 +62,9 @@ public class Jornal extends ItemAcervo {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
+
+    @Override
+    public String getCodigoExclusivo() {
+        return this.codigoJornal;
+    }
 }

@@ -67,4 +67,9 @@ public class Livro extends ItemAcervo {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
+
+    @Override
+    public String getCodigoExclusivo() {
+        return this.codigoLivro;
+    }
 }
