@@ -64,6 +64,7 @@
                         <li><a th:href="@{/jornal/jornalLista}"   class="submenu-link"><i class="bi bi-newspaper"></i>Jornais</a></li>
                         <li><a th:href="@{/livro/livroLista}"     class="submenu-link"><i class="bi bi-book"></i>Livros</a></li>
                         <li><a th:href="@{/revista/revistaLista}" class="submenu-link"><i class="bi bi-journal"></i>Revistas</a></li>
+                        <li><a th:href="@{/exemplar/exemplarLista}" class="submenu-link"><i class="bi bi-journal"></i>Exemplares</a></li>
                     </ul>
                 </div>
             </li>
@@ -126,8 +127,8 @@
                                 <div class="text-danger" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></div>
                             </div>
                             <div class="col-md-6">
-                                <label for="id_acervo" class="form-label required">Item Registrado<span class="text-danger">*</span></label>
-                                <select id="id_acervo" class="form-select" th:field="*{itemAcervo}">
+                                <label for="idAcervo" class="form-label required">Item Registrado<span class="text-danger">*</span></label>
+                                <select id="idAcervo" class="form-select" th:field="*{itemAcervo}">
                                     <option value="">Selecione um item...</option>
 
                                     <th:block th:each="item : ${todosExemplares}">
@@ -200,7 +201,7 @@
                                     <span th:unless="${exemplar.ativo}" class="badge bg-danger">Inativo</span>
                                 </td>
                                 <td>
-                                    <a th:href="@{/exemplar.html/editar/{idExemplar}(idExemplar=${exemplar.id_exemplar})}"
+                                    <a th:href="@{/exemplar.html/editar/{idExemplar}(idExemplar=${exemplar.idExemplar})}"
                                        class="btn btn-sm btn-outline-warning me-3"><i class="bi bi-pencil"></i>
                                     </a>
                                 </td>
