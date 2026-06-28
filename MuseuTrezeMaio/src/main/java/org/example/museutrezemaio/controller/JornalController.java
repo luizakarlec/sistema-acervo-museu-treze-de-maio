@@ -33,7 +33,7 @@ public class JornalController {
     @GetMapping("/jornalFormulario")
     public String exibirFormularioJonral(Model model){
         model.addAttribute("jornal",new Jornal());
-        model.addAttribute("listaEditoras", editoraService.listaEditoras());
+        model.addAttribute("listaEditoras", editoraService.listarEditorasAtivas());
         return "jornalFormulario";
     }
 

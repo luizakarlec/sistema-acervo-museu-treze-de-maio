@@ -108,7 +108,7 @@
                             <label class="form-label small fw-bold">Assunto</label>
                             <select name="assuntoId" class="form-select form-select-sm">
                                 <option value="">Todos os assuntos</option>
-                                <option th:each="as : ${listaAssuntos}"
+                                <option th:each="as : ${listaAssuntosAtivos}"
                                         th:value="${as.idAssunto}"
                                         th:text="${as.descricao}"
                                         th:selected="${assuntoIdSelecionado != null and assuntoIdSelecionado == as.idAssunto}">
@@ -121,7 +121,7 @@
                             <label class="form-label small fw-bold">Editora</label>
                             <select name="editoraId" class="form-select form-select-sm">
                                 <option value="">Todas as editoras</option>
-                                <option th:each="ed : ${listaEditoras}"
+                                <option th:each="ed : ${listaEditorasAtivas}"
                                         th:value="${ed.idEditora}"
                                         th:text="${ed.nome}"
                                         th:selected="${editoraIdSelecionada != null and editoraIdSelecionada == ed.idEditora}">

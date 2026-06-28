@@ -32,6 +32,10 @@ public class AssuntoService {
         return assuntoRepository.findAll(Sort.by("descricao").ascending());
     }
 
+    public List<Assunto> listarAssuntosAtivos(){
+        return assuntoRepository.findByAtivoTrueOrderByDescricaoAsc();
+    }
+
     public Page<Assunto> listarAssuntos(int page){
 
         return assuntoRepository.findAll(PageRequest.of(page,15,Sort.by("descricao").ascending()));
@@ -47,6 +51,7 @@ public class AssuntoService {
         }
         return assuntoRepository.findByDescricaoContainingIgnoreCase(descricao);
     }
+
 
 
 }

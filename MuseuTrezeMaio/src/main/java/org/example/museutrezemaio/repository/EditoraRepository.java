@@ -11,5 +11,6 @@ public interface EditoraRepository extends JpaRepository<Editora, Integer> {
 
     boolean existsByNomeAndLocalizacaoCidadeAndLocalizacaoEstadoAndIdEditoraNot(String nome, String cidade, String estado, int idEditora);
     List<Editora> findByNomeContainingIgnoreCase(String nome);
+    List<Editora> findByAtivoTrueOrderByNomeAsc();
 
 }
