@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="popups">
+    <!--modal de assunto-->
+    <div class="modal fade" id="modalAssunto" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Novo Assunto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="formAssunto">
+                        <div class="mb-3">
+                            <label class="form-label">Descrição</label>
+
+                            <input id="descricaoAssunto" class="form-control">
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="ativoAssunto" checked>
+                            <label class="form-check-label">Ativo</label>
+                        </div>
+
+                    </form>
+
+                    <div id="erroAssunto" class="text-danger mt-2"></div>
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                    <button class="btn text-white" style="background:#2C5B37" onclick="salvarAssunto()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Editora -->
+    <div class="modal fade" id="modalEditora" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Nova Editora</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditora">
+                        <div class="mb-3">
+                            <label class="form-label">Nome</label>
+                            <input type="text" id="nomeEditora" class="form-control">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cidade</label>
+                                <input type="text" id="cidadeEditora" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Estado</label>
+                                <input type="text" id="estadoEditora" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="ativoEditora" checked>
+                            <label class="form-check-label">Ativo</label>
+                        </div>
+                    </form>
+
+                    <div id="erroEditora" class="text-danger mt-2"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn text-white" style="background:#2C5B37" onclick="salvarEditora()">Salvar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal Colaborador -->
+    <div class="modal fade" id="modalColaborador" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Novo Colaborador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formColaborador">
+                        <div class="mb-3">
+                            <label class="form-label">Nome</label>
+                            <input type="text" id="nomeColaborador" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sobrenome</label>
+                            <input type="text" id="sobrenomeColaborador" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nacionalidade</label>
+                            <input type="text" id="nacionalidadeColaborador" class="form-control">
+                        </div>
+                        <div class="mb-3"><label class="form-label">Tipo</label>
+                            <select id="tipoColaborador" class="form-select">
+                                <option value="">Selecione o tipo</option>
+                                <option value="Autor">Autor</option>
+                                <option value="Colaborador">Colaborador</option>
+                                <option value="Editor">Editor</option>
+                                <option value="Ilustrador">Ilustrador</option>
+                                <option value="Organizador">Organizador</option>
+                                <option value="Tradutor">Tradutor</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="ativoColaborador" checked>
+                            <label class="form-check-label">Ativo</label>
+                        </div>
+                    </form>
+                    <div id="erroColaborador" class="text-danger mt-2"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn text-white" style="background:#2C5B37" onclick="salvarColaborador()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+
+</html>
