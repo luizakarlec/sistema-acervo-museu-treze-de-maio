@@ -60,6 +60,11 @@
                         <i class="bi bi-house-door-fill me-2"></i>Página Inicial
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a th:href="@{/sobre}" class="nav-link ">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Sobre o Museu</a>
+                </li>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','BIBLIOTECARIO')">
                     <a th:href="@{/admin}" class="nav-link">
                         <i class="bi bi-shield-lock-fill me-2"></i>Administração
@@ -121,18 +126,7 @@
         </div>
 
         <!-- Hero Banner -->
-        <!--<div class="hero py-5 px-4 px-lg-5">
-            <div class="text-white">
-                <h1 class="display-5 fw-bold mb-3">Museu Treze de Maio</h1>
-                <p class="lead mb-4" style="opacity:.9; max-width:600px;">
-                    Explore nosso acervo digital com livros, revistas e jornais que
-                    preservam a história e cultura afro-brasileira.
-                </p>
-                <a th:href="@{/pesquisa}" class="btn btn-light btn-lg shadow-sm">
-                    <i class="bi bi-search me-2"></i>Explorar Acervo
-                </a>
-            </div>
-        </div>-->
+
         <div class="hero py-5 px-4 px-lg-5">
             <div class="container-fluid">
                 <div class="row align-items-center">

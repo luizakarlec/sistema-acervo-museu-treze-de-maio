@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sobre o Museu</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/header_superior :: headerSuperior}"></div>
+
+
+    <div class="container mb-5 text-justificado">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body p-5">
+
+                <div class="row align-items-start mb-4 ">
+
+                    <div class="col-lg-7">
+                        <h2 class="fw-bold mb-4">
+                            Nossa História
+                        </h2>
+
+                        <p class="lead">
+                            A Sociedade Cultural Ferroviária Treze de Maio foi fundada em 13 de maio de 1903 por negros ferroviários e para negros, tendo em vista a discriminação racial existente na cidade e
+                            a proibição aos negros de freqüentar as sociedades de brancos. Além disso, teve a intenção de celebrar a abolição da escravatura
+                            ocorrida oficialmente quinze anos antes da fundação da Sociedade.
+                        </p>
+
+                        <p class="lead">
+                            A Sociedade chegou a integrar um número de oitocentos associados e, na década de 1960 eles construíram, em regime de mutirão, um
+                            novo espaço, mais amplo para atender a demanda do público que ampliava a cada dia. Com as mudanças nas relações interétnicas os brancos passaram a frequentar a Sociedade Cultural Ferroviária 13 de Maio, assim como
+                            os negros também passaram a poder entrar nos clubes anteriormente só para os brancos, fator que contribuiu para que os sócios fossem
+                            abandonando a Sociedade. O</p>
+                    </div>
+
+                    <div class="col-lg-5 mt-4 mt-lg-0 text-center">
+                        <img th:src="@{/images/museu_gr.jpeg}"
+                             alt="História do Museu"
+                             class="img-fluid rounded-3 shadow-sm"
+                             style="max-height: 450px; w-100; object-fit: cover;">
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <p class="lead">
+                            Em 1974 foi reconhecida a utilidade Pública da Sociedade Cultural Ferroviária Treze de Maio, e em 2001 passou a integrar o Programa de Preservação
+                            e Revitalização da Mancha Ferroviária de Santa Maria, revitalizada enquanto um Museu Comunitário.
+                        </p>
+
+                        <p class="lead">
+                            O Museu Treze de Maio surgiu em 2001 como uma estratégia para “salvaguardar” o patrimônio da Sociedade Cultural Ferroviária 13 de Maio, dando um
+                            sentido útil para a comunidade interessada e, partindo desta idéia, vislumbrar políticas públicas que dessem conta de sua preservação. Nesse sentido,
+                            o prédio que abriga o Museu foi tombado como patrimônio cultural municipal em dezembro de 2004 – Lei Nº. 4809/04 e em 21 de dezembro desse mesmo ano
+                            o Governo do Estado sancionou a Lei n° 12.183, que “declarou como bem integrante do Patrimônio Histórico e Cultural do Estado do RS, o edifício da antiga
+                            Sociedade Cultural Ferroviária 13 de Maio”.
+                        </p>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="container mb-5">
+
+        <h2 class="fw-bold text-center mb-5">Linha do Tempo</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h3 class="text-success fw-bold">1903</h3>
+                        <p>Fundação da Sociedade Cultural Ferroviária Treze de Maio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h3 class="text-success fw-bold">1960</h3>
+                        <p>Construção da nova sede em regime de mutirão.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm border-0">
+
+                    <div class="card-body text-center">
+                        <h3 class="text-success fw-bold">2001</h3>
+                        <p>Criação do Museu Treze de Maio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h3 class="text-success fw-bold">2004</h3>
+                        <p>Tombamento como patrimônio histórico e cultural.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <img th:src="@{/images/museu_treze.jpg}" class="img-fluid rounded shadow">
+            </div>
+
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">O Museu Hoje</h2>
+                <p class="lead">
+                    O Museu Treze de Maio preserva documentos, fotografias, livros, jornais, revistas e objetos
+                    que contam a trajetória da população negra de Santa Maria e da região.
+                </p>
+                <p class="lead">
+                    Além do acervo, desenvolve projetos educativos, pesquisas e ações culturais voltadas à valorização
+                    da memória afro-brasileira.
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
