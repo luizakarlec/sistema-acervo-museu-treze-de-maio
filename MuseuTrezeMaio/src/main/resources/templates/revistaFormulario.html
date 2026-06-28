@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>Cadastro de Revista | Museu Treze de Maio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -178,12 +180,21 @@
                                 <input type="text" class="form-control" id="localizacaoAcervo" th:field="*{localizacaoAcervo}" placeholder="Estante - Prateleira - Caixa">
                             </div>
 
+                            <!-- Editora -->
                             <div class="col-md-6">
                                 <label for="editora" class="form-label">Editora</label>
-                                <select id="editora" class="form-select" th:field="*{editora}">
-                                    <option value="">Selecione uma editora...</option>
-                                    <option th:each="ed : ${listaEditoras}" th:value="${ed.idEditora}" th:text="${ed.nome}"></option>
-                                </select>
+                                <div class="input-group">
+                                    <select id="editora" class="form-select" th:field="*{editora}">
+                                        <option value="">Selecione uma editora...</option>
+                                        <option th:each="ed : ${listaEditoras}"
+                                                th:value="${ed.idEditora}"
+                                                th:text="${ed.nome}">
+                                        </option>
+                                    </select>
+                                    <button type="button" class="btn text-white" style="background:#2C5B37" data-bs-toggle="modal" data-bs-target="#modalEditora">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -248,6 +259,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+</script>
+<div th:replace="~{fragments/popup-cadastros :: popups}"></div>
+<script th:src="@{/js/popup-cadastro.js}"></script>
 </body>
 </html>
