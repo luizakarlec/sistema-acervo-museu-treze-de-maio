@@ -103,8 +103,8 @@
                             </a>
                         </li>
                         <li>
-                            <a th:href="@{/exemplar/lista}" class="submenu-link">
-                                <i class="bi bi-journal"></i>Exemplares
+                            <a th:href="@{/exemplar/exemplarLista}" class="submenu-link">
+                                <i class="bi bi-clipboard"></i>Exemplares
                             </a>
                         </li>
                         <li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/usuario/usuarioLista}" class="submenu-link active"><i class="bi bi-people"></i>Usuários</a></li>
@@ -310,6 +310,26 @@
                                 </div>
                             </div>
                             <a th:href="@{/colaborador/lista}" class="btn btn-outline-secondary btn-sm w-100">
+                                <i class="bi bi-list me-1"></i>Abrir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exemplares -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm card-section h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle p-2 me-3" style="background-color:#d8f0de;">
+                                    <i class="bi bi-clipboard fs-4" style="color:#2C5B37;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">Exemplares</h6>
+                                    <small class="text-muted">Gerenciar exemplares</small>
+                                </div>
+                            </div>
+                            <a th:href="@{/exemplar/lista}" class="btn btn-outline-secondary btn-sm w-100">
                                 <i class="bi bi-list me-1"></i>Abrir
                             </a>
                         </div>
