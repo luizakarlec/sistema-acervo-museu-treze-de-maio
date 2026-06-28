@@ -1,5 +1,6 @@
 package org.example.museutrezemaio.service;
 
+import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.model.Colaborador;
 import org.example.museutrezemaio.model.Exemplar;
 import org.example.museutrezemaio.repository.ExemplarRepository;
@@ -17,19 +18,25 @@ public class ExemplarService {
 
     public ExemplarService(ExemplarRepository exemplarRepository) {this.exemplarRepository = exemplarRepository;}
 
-    public void salvarExemplar(Exemplar exemplar) {
-        //implementar ExistsBy... antes de salvar
-        exemplarRepository.save(exemplar);
-
-
+    public Exemplar salvarExemplar(Exemplar exemplar) {
+        if(exemplarRepository.existsByCodigoAndIdExemplarNot(exemplar.getCodigo(), exemplar.getIdExemplar())){
+            throw  new IllegalArgumentException ("Já existe um exemplar cadastrado com esse codigo");
+        }
+        return exemplarRepository.save(exemplar);
     }
 
     public Page<Exemplar> listarExemplaresPaginas(int page){
         return exemplarRepository.findAll(PageRequest.of(page,15, Sort.by("codigo").ascending()));
     }
 
-
     public List<Exemplar> listarExemplares() { return exemplarRepository.findAll((Sort.by("codigo").ascending()));}
 
     public Optional<Exemplar> editarId(Integer id) { return exemplarRepository.findById(id); }
+
+    public List<Exemplar> buscarPorCodigo(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return exemplarRepository.findAll();
+        }
+        return exemplarRepository.findByCodigoContainingIgnoreCase(codigo);
+    }
 }

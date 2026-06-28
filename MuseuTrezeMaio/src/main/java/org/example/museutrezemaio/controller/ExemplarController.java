@@ -5,6 +5,7 @@ import org.example.museutrezemaio.model.Exemplar;
 import org.example.museutrezemaio.service.ExemplarService;
 import org.example.museutrezemaio.service.ItemAcervoService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,7 +51,7 @@ public class ExemplarController {
             return "exemplar";
         }
 
-        if (exemplar.getId_exemplar() > 0) {
+        if (exemplar.getIdExemplar() > 0) {
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso",
                     "Exemplar atualizado com sucesso!"
@@ -68,7 +69,7 @@ public class ExemplarController {
     @GetMapping("/lista")
     public String exemplarLista(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<Exemplar> paginaExemplares = exemplarService.listarExemplaresPaginas(page);
-        List<Exemplar> todosExemplares = exemplarService.listarExemplares();
+        List<Exemplar> todosExemplares = exemplarService.buscarPorCodigo("");
 
         model.addAttribute("exemplar", new Exemplar());
         model.addAttribute("paginaExemplares", paginaExemplares);
@@ -76,6 +77,20 @@ public class ExemplarController {
         model.addAttribute("todosExemplares", todosExemplares); //lista para o JS
 
         return "exemplar";
+    }
+
+    @PostMapping("/ajax")
+    @ResponseBody
+    public ResponseEntity<?> salvarAjax(@RequestBody Exemplar exemplar) {
+
+        try {
+            Exemplar exemplarSalvo = exemplarService.salvarExemplar(exemplar);
+            return ResponseEntity.ok(exemplarSalvo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        }
+
     }
 
     @GetMapping("/exemplar/{idExemplar}")

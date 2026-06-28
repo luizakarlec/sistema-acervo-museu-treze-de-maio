@@ -117,7 +117,7 @@
                     </div>
 
                     <form method="POST" th:action="@{/exemplar/salvarExemplar}" th:object="${exemplar}">
-                        <input type="hidden" th:field="*{id_exemplar}">
+                        <input type="hidden" th:field="*{idExemplar}">
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -126,24 +126,24 @@
                                 <div class="text-danger" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></div>
                             </div>
                             <div class="col-md-6">
-                                <label for="id_acervo" class="form-label required">Item Registrado</label>
+                                <label for="id_acervo" class="form-label required">Item Registrado<span class="text-danger">*</span></label>
                                 <select id="id_acervo" class="form-select" th:field="*{itemAcervo}">
                                     <option value="">Selecione um item...</option>
 
                                     <th:block th:each="item : ${todosExemplares}">
 
-                                        <option th:if="${item.itemAcervo.tipo == 'Revista'}"
-                                                th:value="${item.id_exemplar}"
+                                        <option th:if="${item.itemAcervo?.tipo == 'Revista'}"
+                                                th:value="${item.idExemplar}"
                                                 th:text="${item.itemAcervo.codigoExclusivo}">
                                         </option>
 
-                                        <option th:if="${item.itemAcervo.class.simpleName == 'Livro'}"
-                                                th:value="${item.id_exemplar}"
+                                        <option th:if="${item.itemAcervo?.tipo == 'Livro'}"
+                                                th:value="${item.idExemplar}"
                                                 th:text="${item.itemAcervo.codigoExclusivo}">
                                         </option>
 
-                                        <option th:if="${item.itemAcervo.class.simpleName == 'Jornal'}"
-                                                th:value="${item.id_exemplar}"
+                                        <option th:if="${item.itemAcervo?.tipo == 'Jornal'}"
+                                                th:value="${item.idExemplar}"
                                                 th:text="${item.itemAcervo.codigoExclusivo}">
                                         </option>
 
@@ -194,6 +194,7 @@
                             <tbody>
                             <tr th:each="exemplar :${paginaExemplares.content}">
                                 <td th:text="${exemplar.codigo}"></td>
+                                <td th:text="${exemplar.itemAcervo.codigoExclusivo}"></td>
                                 <td>
                                     <span th:if="${exemplar.ativo}" class="badge bg-success">Ativo</span>
                                     <span th:unless="${exemplar.ativo}" class="badge bg-danger">Inativo</span>
@@ -247,7 +248,7 @@
 <div id="dados-exemplares-armazenados" style="display: none;">
     <div class="dado-exemplar-item"
          th:each="exemplar : ${todosExemplares}"
-         th:data-id="${exemplar.id_exemplar}"
+         th:data-id="${exemplar.idExemplar}"
          th:data-codigo="${exemplar.codigo}"
          th:data-ativo="${exemplar.ativo}">
     </div>
