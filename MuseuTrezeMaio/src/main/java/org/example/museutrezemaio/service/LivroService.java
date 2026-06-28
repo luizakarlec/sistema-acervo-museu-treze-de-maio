@@ -1,6 +1,5 @@
 package org.example.museutrezemaio.service;
 
-import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.model.Livro;
 import org.example.museutrezemaio.repository.AssuntoRepository;
 import org.example.museutrezemaio.repository.ColaboradorRepository;

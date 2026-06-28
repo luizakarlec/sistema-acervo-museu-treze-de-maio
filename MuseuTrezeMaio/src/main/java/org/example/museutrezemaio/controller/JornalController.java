@@ -8,6 +8,7 @@ import org.example.museutrezemaio.service.AssuntoService;
 import org.example.museutrezemaio.service.ColaboradorService;
 import org.example.museutrezemaio.service.EditoraService;
 import org.example.museutrezemaio.service.JornalService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -75,9 +76,12 @@ public class JornalController {
     }
 
     @GetMapping("/jornalLista")
-    public String jornalLista(Model model) {
+    public String jornalLista(@RequestParam(defaultValue = "0") int page,Model model) {
         List<Jornal> jornais = jornalService.listaJornais();
+        Page<Jornal> paginaJornais = jornalService.listaJornaisPag(page);
+
         model.addAttribute("listaJornais", jornais);
+        model.addAttribute("paginaJornais", paginaJornais);
         return "jornalLista";
     }
 
