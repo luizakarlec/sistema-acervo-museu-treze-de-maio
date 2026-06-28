@@ -52,6 +52,7 @@
     min-height: 550px;
     display: flex;
     align-items: center;
+    background-color: #2C5B37;
 }
 
 .hero-img{
@@ -75,7 +76,7 @@
 }
 
 /*pagina de login*/
-body {
+body.login-body {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -146,3 +147,12 @@ body {
     max-width: 120px;
     height: auto;
 }
+/*pagina sobre*/
+.text-justificado p {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+
+/*footer*/
+footer { background-color: #2C5B37; }

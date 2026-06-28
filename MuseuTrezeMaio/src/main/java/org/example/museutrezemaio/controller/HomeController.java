@@ -89,4 +89,9 @@ public class HomeController {
     public String login() {
         return "login";
     }
+
+    @GetMapping("/sobre")
+    public String sobre() {
+        return "sobre";
+    }
 }

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
 
 <th:block th:fragment="footer">
 
@@ -23,6 +25,9 @@
                         <li><a th:href="@{/pesquisa}" class="text-white text-decoration-none">Acervo</a></li>
                         <li sec:authorize="hasAnyAuthority('ADMIN','BIBLIOTECARIO')">
                             <a th:href="@{/admin}" class="text-white text-decoration-none">Administração</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/sobre}" class="text-white text-decoration-none">Sobre o Museu</a>
                         </li>
                     </ul>
                 </div>
