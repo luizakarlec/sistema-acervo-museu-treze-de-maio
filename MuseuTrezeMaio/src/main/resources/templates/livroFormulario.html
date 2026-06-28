@@ -242,7 +242,7 @@
                             </div>
 
                             <!-- Colaboradores (multi-select) -->
-                            <div class="col-md-6">
+                            <!--<div class="col-md-6">
                                 <label for="colaboradoresIds" class="form-label">Colaboradores</label>
                                 <select id="colaboradoresIds" name="colaboradoresIds" class="form-select" multiple size="5">
                                     <option th:each="col : ${listaColaboradores}"
@@ -254,25 +254,32 @@
                                 <small class="text-muted">
                                     Segure <kbd>Ctrl</kbd> (ou <kbd>⌘</kbd>) para selecionar múltiplos.
                                 </small>
+                            </div>-->
+                            <div class="col-md-6">
+                                <label for="colaboradoresIds" class="form-label">Colaboradores</label>
+                                <div class="input-group align-items-start">
+                                    <select id="colaboradoresIds" name="colaboradoresIds" class="form-select" multiple size="5">
+                                        <option th:each="col : ${listaColaboradores}"
+                                                th:value="${col.idColaborador}"
+                                                th:text="${col.nome + ' ' + col.sobrenome + ' (' + col.tipo + ')'}"
+                                                th:selected="${selectedColaboradoresIds.contains(col.idColaborador)}">
+                                        </option>
+                                    </select>
+                                    <button type="button" class="btn text-white" style="background:#2C5B37" data-bs-toggle="modal" data-bs-target="#modalColaborador">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+
+                                </div>
+                                <small class="text-muted">
+                                    Segure Ctrl (ou <kbd>⌘</kbd>) para selecionar múltiplos ou clique em <b>+</b> para cadastrar um novo colaborador.
+                                </small>
+
                             </div>
 
                             <!-- Assuntos (multi-select) -->
-                            <!--<div class="col-md-6">
-                                <label for="assuntosIds" class="form-label">Assuntos</label>
-                                <select id="assuntosIds" name="assuntosIds" class="form-select" multiple size="5">
-                                    <option th:each="as : ${listaAssuntos}"
-                                            th:value="${as.idAssunto}"
-                                            th:text="${as.descricao}"
-                                            th:selected="${selectedAssuntosIds.contains(as.idAssunto)}">
-                                    </option>
-                                </select>
-                                <small class="text-muted">
-                                    Segure <kbd>Ctrl</kbd> (ou <kbd>⌘</kbd>) para selecionar múltiplos.
-                                </small>
-                            </div>-->
                             <div class="col-md-6">
                                 <label for="assuntosIds" class="form-label">Assuntos </label>
-                                <div class="input-group">
+                                <div class="input-group align-items-start">
                                     <select id="assuntosIds" name="assuntosIds" class="form-select" multiple size="5">
                                         <option
                                                 th:each="as : ${listaAssuntos}"
@@ -287,7 +294,7 @@
                                     </button>
                                 </div>
                                 <small class="text-muted">
-                                    Segure Ctrl para selecionar múltiplos ou clique em <b>+</b> para cadastrar um novo assunto.
+                                    Segure Ctrl (ou <kbd>⌘</kbd>) para selecionar múltiplos ou clique em <b>+</b> para cadastrar um novo assunto.
                                 </small>
                             </div>
 
@@ -478,6 +485,77 @@
         ).hide();
     }
 
+    //COLABORADOR
+
+    async function salvarColaborador(){
+        const nome = document.getElementById("nomeColaborador").value;
+        const sobrenome = document.getElementById("sobrenomeColaborador").value;
+        const nacionalidade = document.getElementById("nacionalidadeColaborador").value;
+        const tipo = document.getElementById("tipoColaborador").value;
+        const ativo = document.getElementById("ativoColaborador").checked;
+        const erro = document.getElementById("erroColaborador");
+        erro.innerHTML = "";
+        if(nome.trim() === ""){
+            erro.innerHTML = "Informe o nome.";
+            return;
+        }
+        if(sobrenome.trim() === ""){
+            erro.innerHTML = "Informe o sobrenome.";
+            return;
+        }
+        if(tipo === ""){
+            erro.innerHTML = "Selecione o tipo.";
+            return;
+        }
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const response = await fetch("/colaborador/ajax",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                [header]:token
+            },
+            body:JSON.stringify({
+                nome:nome,
+                sobrenome:sobrenome,
+                nacionalidade:nacionalidade,
+                tipo:tipo,
+                ativo:ativo
+            })
+        });
+        if(!response.ok) {
+            erro.innerHTML = await response.text();
+            return;
+        }
+        const colaborador = await response.json();
+        adicionarColaboradorNoSelect(colaborador);
+    }
+
+    function adicionarColaboradorNoSelect(colaborador){
+
+        const select = document.getElementById("colaboradoresIds");
+        const option = document.createElement("option");
+        option.value = colaborador.idColaborador;
+        option.text =
+            colaborador.nome +
+            " " +
+            colaborador.sobrenome +
+            " (" +
+            colaborador.tipo +
+            ")";
+
+        option.selected = true;
+        select.appendChild(option);
+        document.getElementById("nomeColaborador").value = "";
+        document.getElementById("sobrenomeColaborador").value = "";
+        document.getElementById("nacionalidadeColaborador").value = "";
+        document.getElementById("tipoColaborador").value = "";
+        document.getElementById("ativoColaborador").checked = true;
+        document.getElementById("erroColaborador").innerHTML = "";
+        bootstrap.Modal.getInstance(
+            document.getElementById("modalColaborador")
+        ).hide();
+    }
 </script>
 
 <div class="modal fade" id="modalAssunto" tabindex="-1">
@@ -555,6 +633,55 @@
                 <button type="button" class="btn text-white" style="background:#2C5B37" onclick="salvarEditora()">Salvar</button>
             </div>
 
+        </div>
+    </div>
+</div>
+<!-- Modal Colaborador -->
+<div class="modal fade" id="modalColaborador" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Colaborador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formColaborador">
+                    <div class="mb-3">
+                        <label class="form-label">Nome</label>
+                        <input type="text" id="nomeColaborador" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sobrenome</label>
+                        <input type="text" id="sobrenomeColaborador" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nacionalidade</label>
+                        <input type="text" id="nacionalidadeColaborador" class="form-control">
+                    </div>
+                    <div class="mb-3"><label class="form-label">Tipo</label>
+                        <select id="tipoColaborador" class="form-select">
+                            <option value="">Selecione o tipo</option>
+                            <option value="Autor">Autor</option>
+                            <option value="Colaborador">Colaborador</option>
+                            <option value="Editor">Editor</option>
+                            <option value="Ilustrador">Ilustrador</option>
+                            <option value="Organizador">Organizador</option>
+                            <option value="Tradutor">Tradutor</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="ativoColaborador" checked>
+                        <label class="form-check-label">Ativo</label>
+                    </div>
+                </form>
+                <div id="erroColaborador" class="text-danger mt-2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn text-white" style="background:#2C5B37" onclick="salvarColaborador()">Salvar</button>
+            </div>
         </div>
     </div>
 </div>
