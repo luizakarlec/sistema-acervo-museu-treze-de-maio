@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="footer">
+
+    <footer class="mt-auto py-4">
+        <div class="container">
+            <div class="row text-white">
+                <div class="col-md-4 mb-3">
+                    <h5>Museu Treze de Maio</h5>
+                    <p class="small">
+                        Preservando a história e cultura afro-brasileira através de um acervo digital acessível a todos.
+                       <br><br>
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        R. Silva Jardim, 1405 - Nossa Sra. do Rosario, Santa Maria - RS
+                    </p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Links Rápidos</h5>
+                    <ul class="list-unstyled small">
+                        <li><a th:href="@{/}" class="text-white text-decoration-none">Início</a></li>
+                        <li><a th:href="@{/pesquisa}" class="text-white text-decoration-none">Acervo</a></li>
+                        <li sec:authorize="hasAnyAuthority('ADMIN','BIBLIOTECARIO')">
+                            <a th:href="@{/admin}" class="text-white text-decoration-none">Administração</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Contato</h5>
+                    <p >
+                        <i class="bi bi-envelope me-2"></i>contato@museutrezedemio.com.br<br>
+                        <i class="bi bi-telephone me-2"></i>(55) 3226-6082<br>
+                        <a href="https://www.instagram.com/museutrezedemaio/"
+                           target="_blank"
+                           class="text-white text-decoration-none">
+                            <i class="bi bi-instagram me-2"></i> @museutrezedemaio
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <hr class="border-white opacity-25">
+            <p class="text-center text-white small mb-0">&copy; 2026 Museu Treze de Maio. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</th:block>
+
+</html>
