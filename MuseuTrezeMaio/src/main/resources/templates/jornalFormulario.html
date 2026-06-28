@@ -62,7 +62,7 @@
                         <li><a th:href="@{/jornal/jornalLista}"   class="submenu-link active"><i class="bi bi-newspaper"></i>Jornais</a></li>
                         <li><a th:href="@{/livro/livroLista}"     class="submenu-link"><i class="bi bi-book"></i>Livros</a></li>
                         <li><a th:href="@{/revista/revistaLista}" class="submenu-link"><i class="bi bi-journal"></i>Revistas</a></li>
-                        <li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/usuario/usuarioLista}" class="submenu-link active"><i class="bi bi-people"></i>Usuários</a></li>
+                        <li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/usuario/usuarioLista}" class="submenu-link"><i class="bi bi-people"></i>Usuários</a></li>
                     </ul>
                 </div>
             </li>
@@ -184,6 +184,50 @@
                                         <i class="bi bi-plus-lg"></i>
                                     </button>
                                 </div>
+                            </div>
+
+                            <!-- Colaborador (multi-select) -->
+                            <div class="col-md-6">
+                                <label for="colaboradoresIds" class="form-label">Colaboradores</label>
+                                <div class="input-group align-items-start">
+                                    <select id="colaboradoresIds" name="colaboradoresIds" class="form-select" multiple size="5">
+                                        <option th:each="col : ${listaColaboradores}"
+                                                th:value="${col.idColaborador}"
+                                                th:text="${col.nome + ' ' + col.sobrenome + ' (' + col.tipo + ')'}"
+                                                th:selected="${selectedColaboradoresIds.contains(col.idColaborador)}">
+                                        </option>
+                                    </select>
+                                    <button type="button" class="btn text-white" style="background:#2C5B37" data-bs-toggle="modal" data-bs-target="#modalColaborador">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+
+                                </div>
+                                <small class="text-muted">
+                                    Segure Ctrl (ou <kbd>⌘</kbd>) para selecionar múltiplos ou clique em <b>+</b> para cadastrar um novo colaborador.
+                                </small>
+
+                            </div>
+
+                            <!-- Assuntos (multi-select) -->
+                            <div class="col-md-6">
+                                <label for="assuntosIds" class="form-label">Assuntos </label>
+                                <div class="input-group align-items-start">
+                                    <select id="assuntosIds" name="assuntosIds" class="form-select" multiple size="5">
+                                        <option
+                                                th:each="as : ${listaAssuntos}"
+                                                th:value="${as.idAssunto}"
+                                                th:text="${as.descricao}"
+                                                th:selected="${selectedAssuntosIds.contains(as.idAssunto)}">
+                                        </option>
+                                    </select>
+                                    <button
+                                            type="button" class="btn text-white" style="background:#2C5B37" data-bs-toggle="modal" data-bs-target="#modalAssunto">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                                <small class="text-muted">
+                                    Segure Ctrl (ou <kbd>⌘</kbd>) para selecionar múltiplos ou clique em <b>+</b> para cadastrar um novo assunto.
+                                </small>
                             </div>
 
                             <div class="col-md-6">

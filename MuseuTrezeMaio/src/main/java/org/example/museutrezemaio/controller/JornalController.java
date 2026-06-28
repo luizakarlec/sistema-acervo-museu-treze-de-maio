@@ -1,7 +1,11 @@
 package org.example.museutrezemaio.controller;
 
+import org.example.museutrezemaio.model.Assunto;
+import org.example.museutrezemaio.model.Colaborador;
 import org.example.museutrezemaio.model.Jornal;
 import org.example.museutrezemaio.model.Localizacao;
+import org.example.museutrezemaio.service.AssuntoService;
+import org.example.museutrezemaio.service.ColaboradorService;
 import org.example.museutrezemaio.service.EditoraService;
 import org.example.museutrezemaio.service.JornalService;
 import org.springframework.http.HttpHeaders;
@@ -18,42 +22,52 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/jornal")
 public class JornalController {
     private final JornalService jornalService;
     private final EditoraService editoraService;
+    private final ColaboradorService colaboradorService;
+    private final AssuntoService  assuntoService;
 
-    public JornalController(JornalService jornalService, EditoraService editoraService) {
+    public JornalController(JornalService jornalService, EditoraService editoraService, ColaboradorService colaboradorService, AssuntoService assuntoService) {
         this.jornalService = jornalService;
         this.editoraService = editoraService;
+        this.colaboradorService = colaboradorService;
+        this.assuntoService = assuntoService;
     }
+
     @GetMapping("/jornalFormulario")
     public String exibirFormularioJonral(Model model){
-        model.addAttribute("jornal",new Jornal());
-        model.addAttribute("listaEditoras", editoraService.listarEditorasAtivas());
+        Jornal jornal = new Jornal();
+        model.addAttribute("jornal", jornal);
+        carregarListasFormulario(model, jornal);
         return "jornalFormulario";
     }
 
     @PostMapping("/salvarJornal")
-    public String salvarJornal(@Validated @ModelAttribute("jornal") Jornal jornal, BindingResult result, @RequestParam("fileCapa") MultipartFile fileCapa, Model model) {
+    public String salvarJornal(@Validated @ModelAttribute("jornal") Jornal jornal, BindingResult result, @RequestParam("fileCapa") MultipartFile fileCapa, @RequestParam(value = "colaboradoresIds", required = false) List<Integer> colaboradoresIds,
+                               @RequestParam(value = "assuntosIds", required = false) List<Integer> assuntosIds, Model model) {
 
         if (result.hasErrors()) {
-            model.addAttribute("listaEditoras", editoraService.listaEditoras());
+            carregarListasFormulario(model, jornal);
             return "jornalFormulario";
         }
 
         try {
-            jornalService.salvar(jornal, fileCapa);
+            jornalService.salvar(jornal, fileCapa, colaboradoresIds, assuntosIds);
         } catch (IllegalArgumentException e) {
             result.reject("erro", e.getMessage());
-            model.addAttribute("listaEditoras", editoraService.listaEditoras());
+            carregarListasFormulario(model, jornal);
             return "jornalFormulario";
         } catch (Exception e) {
             result.reject("erro", "Erro ao processar a imagem.");
-            model.addAttribute("listaEditoras", editoraService.listaEditoras());
+            carregarListasFormulario(model, jornal);
             return "jornalFormulario";
         }
 
@@ -76,7 +90,7 @@ public class JornalController {
         }
 
         model.addAttribute("jornal", jornal);
-        model.addAttribute("listaEditoras", editoraService.listaEditoras());
+        carregarListasFormulario(model, jornal);
         return "jornalFormulario";
     }
 
@@ -122,5 +136,21 @@ public class JornalController {
         }
 
         return new ResponseEntity<>(capa, headers, HttpStatus.OK);
+    }
+
+    private void carregarListasFormulario(Model model, Jornal jornal) {
+        model.addAttribute("listaEditoras", editoraService.listarEditorasAtivas());
+        model.addAttribute("listaColaboradores", colaboradorService.listarColaboradoresAtivos());
+        model.addAttribute("listaAssuntos", assuntoService.listarAssuntosAtivos());
+
+        List<Integer> colaboradoresIds = (jornal.getColaboradores() != null)
+                ? jornal.getColaboradores().stream().map(Colaborador::getIdColaborador).collect(Collectors.toList())
+                : Collections.emptyList();
+        List<Integer> assuntosIds = (jornal.getAssuntos() != null)
+                ? jornal.getAssuntos().stream().map(Assunto::getIdAssunto).collect(Collectors.toList())
+                : Collections.emptyList();
+
+        model.addAttribute("selectedColaboradoresIds", colaboradoresIds);
+        model.addAttribute("selectedAssuntosIds", assuntosIds);
     }
 }
