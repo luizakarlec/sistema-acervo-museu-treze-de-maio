@@ -1,18 +1,20 @@
 package org.example.museutrezemaio.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Exemplar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_exemplar;
+    private int idExemplar;
 
+    @NotBlank(message = "O campo código é obrigatório")
     @Column(unique = true, nullable = false)
     private String codigo;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_acervo")
+    @JoinColumn(name = "idAcervo")
     private ItemAcervo itemAcervo;
 
     @Column(nullable = false)
@@ -26,12 +28,12 @@ public class Exemplar {
         this.ativo = ativo;
     }
 
-    public int getId_exemplar() {
-        return id_exemplar;
+    public int getIdExemplar() {
+        return idExemplar;
     }
 
-    public void setId_exemplar(int id_exemplar) {
-        this.id_exemplar = id_exemplar;
+    public void setIdExemplar(int id_exemplar) {
+        this.idExemplar = id_exemplar;
     }
 
     public String getCodigo() {
