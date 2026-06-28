@@ -2,6 +2,7 @@ package org.example.museutrezemaio.controller;
 
 
 import org.example.museutrezemaio.model.Revista;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -62,9 +63,12 @@ public class RevistaController {
     }
 
     @GetMapping("revistaLista")
-    public String revistaLista(Model model) {
+    public String revistaLista(@RequestParam(defaultValue = "0") int page,Model model) {
         List<Revista> revistas = revistaService.listar();
+        Page<Revista> paginaRevistas = revistaService.listarRevistaPag(page);
+
         model.addAttribute("listaRevistas", revistas);
+        model.addAttribute("paginaRevistas", paginaRevistas);
         return "revistaLista";
     }
 
