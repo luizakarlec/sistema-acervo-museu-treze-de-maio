@@ -100,4 +100,9 @@ public class Revista extends ItemAcervo {
     public void setNumero(String numero) {
         this.numero = numero;
     }
+
+    @Override
+    public String getCodigoExclusivo() {
+        return this.codigoRevista;
+    }
 }
