@@ -68,11 +68,6 @@
                     <i class="bi bi-house-door-fill me-2"></i>Página Inicial
                 </a>
             </li>
-            <li class="nav-item">
-                <a th:href="@{/pesquisa}" class="nav-link">
-                    <i class="bi bi-collection-fill me-2"></i>Acervo Completo
-                </a>
-            </li>
             <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','BIBLIOTECARIO')">
                 <a th:href="@{/admin}" class="nav-link">
                     <i class="bi bi-shield-lock-fill me-2"></i>Administração
@@ -84,6 +79,11 @@
 
         <p class="sidebar-label mb-1">Categorias</p>
         <ul class="nav nav-pills flex-column gap-1 sidebar-nav mb-4">
+            <li class="nav-item">
+                <a th:href="@{/pesquisa}" class="nav-link">
+                    <i class="bi bi-collection-fill me-2"></i>Acervo Completo
+                </a>
+            </li>
             <li class="nav-item">
                 <a th:href="@{/pesquisa(tipo=Livro)}" class="nav-link">
                     <i class="bi bi-book me-2"></i>Livros
