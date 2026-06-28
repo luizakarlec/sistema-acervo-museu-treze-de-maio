@@ -5,6 +5,7 @@ import org.example.museutrezemaio.model.Assunto;
 import org.example.museutrezemaio.model.Colaborador;
 import org.example.museutrezemaio.service.ColaboradorService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,6 +55,17 @@ public class ColaboradorController {
         }
 
         return "redirect:/colaborador/lista";
+    }
+
+    @PostMapping("/ajax")
+    @ResponseBody
+    public ResponseEntity<?> salvarAjax(@RequestBody Colaborador colaborador){
+        try{
+            Colaborador salvo = colaboradorService.salvar(colaborador);
+            return ResponseEntity.ok(salvo);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/lista")
