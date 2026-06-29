@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -51,9 +52,13 @@ public class RevistaController {
     }
 
     @PostMapping("/salvarRevista")
-    public String salvarRevista(@Validated @ModelAttribute("revista") Revista revista, BindingResult result, @RequestParam("fileCapa") MultipartFile fileCapa, Model model,
-        @RequestParam(value = "colaboradoresIds", required = false) List<Integer> colaboradoresIds,
-        @RequestParam(value = "assuntosIds", required = false) List<Integer> assuntosIds){
+    public String salvarRevista(@Validated @ModelAttribute("revista") Revista revista,
+            BindingResult result,
+            @RequestParam("fileCapa") MultipartFile fileCapa,
+            @RequestParam(value = "colaboradoresIds", required = false) List<Integer> colaboradoresIds,
+            @RequestParam(value = "assuntosIds", required = false) List<Integer> assuntosIds,
+            Model model,
+            RedirectAttributes redirectAttributes){
 
         if (result.hasErrors()) {
             carregarListasFormulario(model, revista);
@@ -67,15 +72,20 @@ public class RevistaController {
             carregarListasFormulario(model, revista);
             return "revistaFormulario";
         } catch (Exception e) {
+            e.printStackTrace();
             result.reject("erro", "Erro ao processar a imagem.");
             carregarListasFormulario(model, revista);
             return "revistaFormulario";
         }
 
+        String mensagem = revista.getIdItemAcervo() > 0
+                ? "Revista atualizada com sucesso!"
+                : "Revista cadastrada com sucesso!";
+        redirectAttributes.addFlashAttribute("mensagemSucesso", mensagem);
         return "redirect:/revista/revistaLista";
     }
 
-    @GetMapping("revistaLista")
+    @GetMapping("/revistaLista")
     public String revistaLista(@RequestParam(defaultValue = "0") int page,Model model) {
         List<Revista> revistas = revistaService.listar();
         Page<Revista> paginaRevistas = revistaService.listarRevistaPag(page);

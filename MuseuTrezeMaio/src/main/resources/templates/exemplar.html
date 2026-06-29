@@ -204,6 +204,7 @@
                             <thead>
                             <tr>
                                 <th>Exemplar</th>
+                                <th>Codigo</th>
                                 <th>Item</th>
                                 <th>Status</th>
                                 <th>Ações</th>
@@ -213,12 +214,13 @@
                             <tr th:each="exemplar :${paginaExemplares.content}">
                                 <td th:text="${exemplar.codigo}"></td>
                                 <td th:text="${exemplar.itemAcervo.codigoExclusivo}"></td>
+                                <td th:text="${exemplar.itemAcervo.Titulo}"></td>
                                 <td>
                                     <span th:if="${exemplar.ativo}" class="badge bg-success">Ativo</span>
                                     <span th:unless="${exemplar.ativo}" class="badge bg-danger">Inativo</span>
                                 </td>
                                 <td>
-                                    <a th:href="@{/exemplar.html/editar/{idExemplar}(idExemplar=${exemplar.idExemplar})}"
+                                    <a th:href="@{/exemplar/editar/{idExemplar}(idExemplar=${exemplar.idExemplar})}"
                                        class="btn btn-sm btn-outline-warning me-3"><i class="bi bi-pencil"></i>
                                     </a>
                                 </td>

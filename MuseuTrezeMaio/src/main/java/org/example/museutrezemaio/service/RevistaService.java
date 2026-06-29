@@ -9,9 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +27,8 @@ public class RevistaService {
         this.colaboradorRepository = colaboradorRepository;
     }
 
-    public void salvar(Revista revista, MultipartFile fileCapa, List<Integer> colaboradoresIds,
+    public void salvar(Revista revista, MultipartFile fileCapa,
+                       List<Integer> colaboradoresIds,
                        List<Integer> assuntosIds) throws IOException {
         if (revista.getISSN() != null && revista.getISSN().trim().isEmpty()) {
             revista.setISSN(null);

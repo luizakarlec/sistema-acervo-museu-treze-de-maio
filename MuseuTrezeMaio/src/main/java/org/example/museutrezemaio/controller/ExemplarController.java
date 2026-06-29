@@ -93,12 +93,13 @@ public class ExemplarController {
 
     }
 
-    @GetMapping("/exemplar/{idExemplar}")
+    @GetMapping("/editar/{idExemplar}")
     public String editarExemplar(@PathVariable int idExemplar,@RequestParam(defaultValue = "0") int page, Model model) {
         Exemplar exemplar = exemplarService.editarId(idExemplar).orElseThrow(() -> new RuntimeException("Exemplar não encontrado"));
         Page<Exemplar> paginaExemplar = exemplarService.listarExemplaresPaginas(page);
         model.addAttribute("exemplar", exemplar);
-        model.addAttribute("listaItemAcervo", itemAcervoService.listarTodos());
+        model.addAttribute("listaItemAcervo", itemAcervoService.listarTodos()); //
+        model.addAttribute("paginaExemplares", paginaExemplar);
         return "exemplar";
     }
 }
