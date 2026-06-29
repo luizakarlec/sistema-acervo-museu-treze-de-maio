@@ -58,13 +58,13 @@
                 </button>
                 <div class="collapse show" id="adminSubmenu">
                     <ul class="nav flex-column gap-1 mt-1">
-                        <li><a th:href="@{/assunto/lista}"        class="submenu-link active"><i class="bi bi-tags"></i>Assuntos</a></li>
+                        <li><a th:href="@{/assunto/lista}"        class="submenu-link"><i class="bi bi-tags"></i>Assuntos</a></li>
                         <li><a th:href="@{/colaborador/lista}"    class="submenu-link"><i class="bi bi-person-badge"></i>Colaboradores</a></li>
                         <li><a th:href="@{/editora/lista}"        class="submenu-link"><i class="bi bi-building"></i>Editoras</a></li>
                         <li><a th:href="@{/jornal/jornalLista}"   class="submenu-link"><i class="bi bi-newspaper"></i>Jornais</a></li>
                         <li><a th:href="@{/livro/livroLista}"     class="submenu-link"><i class="bi bi-book"></i>Livros</a></li>
                         <li><a th:href="@{/revista/revistaLista}" class="submenu-link"><i class="bi bi-journal"></i>Revistas</a></li>
-                        <li><a th:href="@{/exemplar/lista}" class="submenu-link"><i class="bi bi-journal"></i>Exemplares</a></li>
+                        <li><a th:href="@{/exemplar/lista}" class="submenu-link active"><i class="bi bi-clipboard"></i>Exemplares</a></li>
                         <li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/usuario/usuarioLista}" class="submenu-link"><i class="bi bi-people"></i>Usuários</a></li>
                     </ul>
                 </div>
@@ -127,6 +127,21 @@
                                 <input type="text" id="codigo" class="form-control" placeholder="Digite o código do exemplar" th:field="*{codigo}">
                                 <div class="text-danger" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></div>
                             </div>
+
+                            <div class="col-md-6">
+                                <label for="item" class="form-label required">Item do Acervo <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <select id="item" class="form-select" th:field="*{itemAcervo}">
+                                        <option value="">Selecione uma item...</option>
+                                        <option th:each="i : ${listaItemAcervo}"
+                                                th:value="${i.idItemAcervo}"
+                                                th:text="${i.getTitulo()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!--
                             <div class="col-md-6">
                                 <label for="idAcervo" class="form-label required">Item Registrado<span class="text-danger">*</span></label>
                                 <select id="idAcervo" class="form-select" th:field="*{itemAcervo}">
@@ -152,6 +167,7 @@
                                     </th:block>
                                 </select>
                             </div>
+                            -->
                             <div class="col-md-4 mb-3 d-flex align-items-center">
                                 <div class="form-check form-switch mt-4">
                                     <input class="form-check-input" type="checkbox" role="switch" id="ativo" th:field="*{ativo}" checked>
