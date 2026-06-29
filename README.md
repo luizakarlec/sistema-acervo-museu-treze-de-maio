@@ -1,4 +1,6 @@
-# Software - Museu Treze de Maio
+<div align="center"> 
+   
+   # Software - Museu Treze de Maio </div>
 Projeto extensionista da disciplina de Projeto de Software para o curso de Ciência da Computação da [Universidade Franciscana](https://site.ufn.edu.br/).
 
 Foram realizadas realizadas tarefas de análise, modelagem, implementação e refinamento das funcionalidades do sistema, utilizando os artefatos como requisitos, casos de uso, diagramas e protótipos. 
@@ -16,7 +18,7 @@ Esse projeto consiste em um **sistema web de gestão e consulta de acervo digita
 - Controle de acesso por perfil de usuário (Administrador, Bibliotecário), restringindo o cadastro e a edição de itens a usuários autorizados;
 
 
-## Tecnologias utilizadas
+## 🛠️ Tecnologias utilizadas
 - Java
 - Spring Boot
 - Spring Data JPA
@@ -24,7 +26,7 @@ Esse projeto consiste em um **sistema web de gestão e consulta de acervo digita
 - Thymeleaf
 - Bootstrap 5
 
-## Arquitetura
+## 🛠️ Arquitetura
 O projeto segue a arquitetura em camadas, padrão do
 ecossistema Spring:
 ```
@@ -37,7 +39,7 @@ Templates (Thymeleaf) -> Controller → Service → Repository → Model → Ban
 - **Controller**: camada responsável por receber requisições HTTP, orquestrar chamadas aos Services e decidir qual template Thymeleaf renderizar
 - **Security**: configuração centralizada de autenticação e autorização, com controle de acesso por Authority (`ADMIN`, `BIBLIOTECARIO`)
 
-## Instalação e execução
+## 📌 Instalação e execução
 ### Pré-requisitos
 - Java JDK [versão 21] ou superior
 - Maven
@@ -86,11 +88,12 @@ Crie um banco de dados local e configure as credenciais no arquivo `src/main/res
    senha: 1234  
    ```
 
-## Desenvolvedores
+## 👥 Desenvolvedores
 * Éric Martins da Silva - [@ericmds](https://github.com/ericmds)
 * Frazzon - [@Akumashii](https://github.com/Akumashii)
 * Luiza Lewandowski Karlec - [@luizakarlec](https://github.com/luizakarlec)
 * Vanessa Cezar do Nascimento - [@vanessacezarn](https://github.com/vanessacezarn)
 
-## Vídeo Demostrativo
-Link do vídeo !!!
+## 🎬 Vídeo Demostrativo
+
+🔗 [Sistema para o Museu Treze de Maio](https://www.youtube.com/watch?v=TVyPvR3B7H8)
