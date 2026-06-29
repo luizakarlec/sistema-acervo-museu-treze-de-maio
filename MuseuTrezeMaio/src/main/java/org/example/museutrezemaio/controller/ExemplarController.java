@@ -42,7 +42,7 @@ public class ExemplarController {
         try{
             exemplarService.salvarExemplar(exemplar);
         }catch(IllegalArgumentException e){
-            result.rejectValue("erro.global.exemplar", e.getMessage());
+            result.reject("erro", e.getMessage());
             Page<Exemplar> paginaExemplares = exemplarService.listarExemplaresPaginas(page);
             model.addAttribute("exemplar", exemplar);
             model.addAttribute("paginaExemplares", paginaExemplares);

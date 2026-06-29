@@ -2,8 +2,12 @@ package org.example.museutrezemaio.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(
+        uniqueConstraints = { @UniqueConstraint(columnNames = {"codigo", "idAcervo"} ) }
+)
 public class Exemplar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +17,7 @@ public class Exemplar {
     @Column(unique = true, nullable = false)
     private String codigo;
 
+    @NotNull(message = "O item de acervo é obrigatório")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idAcervo")
     private ItemAcervo itemAcervo;

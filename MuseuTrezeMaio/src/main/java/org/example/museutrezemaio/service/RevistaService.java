@@ -4,6 +4,9 @@ import org.example.museutrezemaio.repository.AssuntoRepository;
 import org.example.museutrezemaio.repository.ColaboradorRepository;
 import org.example.museutrezemaio.model.Revista;
 import org.example.museutrezemaio.repository.RevistaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
@@ -69,11 +72,13 @@ public class RevistaService {
         revistaRepository.save(revista);
     }
 
+
+    public List<Revista> listar() { return this.revistaRepository.findAll(); }
+
     public Page<Revista> listarRevistaPag(int page) {
         return this.revistaRepository.findAll(PageRequest.of(page,15, Sort.by("codigoRevista").ascending()));
     }
 
-    public List<Revista> listar() { return this.revistaRepository.findAll(); }
 
     public Optional<Revista> editar(Integer id) { return revistaRepository.findById(id); }
 }

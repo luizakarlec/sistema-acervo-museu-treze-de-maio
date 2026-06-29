@@ -4,6 +4,9 @@ import org.example.museutrezemaio.model.Jornal;
 import org.example.museutrezemaio.repository.AssuntoRepository;
 import org.example.museutrezemaio.repository.ColaboradorRepository;
 import org.example.museutrezemaio.repository.JornalRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +53,11 @@ public class JornalService {
     public List<Jornal> listaJornais(){
         return jornalRepository.findAll();
     }
+
+    public Page<Jornal> listaJornaisPag(int page){
+        return jornalRepository.findAll(PageRequest.of(page,15, Sort.by("codigoJornal").ascending()));
+    }
+
 
     public Optional<Jornal> EditarId(Integer id){
         return jornalRepository.findById(id);

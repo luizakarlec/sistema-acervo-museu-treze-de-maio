@@ -9,6 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
     <style>
         #admin-sidebar {
             width: 260px; min-width: 260px;
@@ -56,7 +58,7 @@
                         <li><a th:href="@{/jornal/jornalLista}"   class="submenu-link"><i class="bi bi-newspaper"></i>Jornais</a></li>
                         <li><a th:href="@{/livro/livroLista}"     class="submenu-link"><i class="bi bi-book"></i>Livros</a></li>
                         <li><a th:href="@{/revista/revistaLista}" class="submenu-link active"><i class="bi bi-journal"></i>Revistas</a></li>
-                        <li><a th:href="@{/exemplar/lista}" class="submenu-link"><i class="bi bi-journal"></i>Exemplares</a></li>
+                        <li><a th:href="@{/exemplar/lista}" class="submenu-link"><i class="bi bi-clipboard"></i>Exemplares</a></li>
                         <li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/usuario/usuarioLista}" class="submenu-link"><i class="bi bi-people"></i>Usuários</a></li>
                     </ul>
                 </div>
@@ -121,7 +123,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="revista : ${listaRevistas}">
+                                <tr th:each="revista : ${paginaRevistas}">
                                     <td class="fw-semibold" th:text="${revista.codigoRevista}"></td>
                                     <td>
                                         <span class="d-block fw-bold text-dark" th:text="${revista.titulo}"></span>
@@ -156,6 +158,20 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <nav th:if="${paginaRevistas.totalPages > 1}">
+                            <ul class="pagination justify-content-center mt-3">
+                                <li class="page-item" th:classappend="${paginaRevistas.first} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/revista/revistaLista(page=${paginaRevistas.number - 1})}">Anterior</a>
+                                </li>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaRevistas.totalPages - 1)}"
+                                    th:classappend="${i == paginaRevistas.number} ? 'active'">
+                                    <a class="page-link" th:text="${i + 1}" th:href="@{/revista/revistaLista(page=${i})}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="${paginaRevistas.last} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/revista/revistaLista(page=${paginaRevistas.number + 1})}">Próxima</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
