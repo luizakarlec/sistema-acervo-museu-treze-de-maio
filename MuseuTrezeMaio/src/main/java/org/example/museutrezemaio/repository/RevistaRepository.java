@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RevistaRepository extends JpaRepository<Revista,Integer> {
+    boolean existsByISSNAndIdItemAcervoNot(String issn, int idItemAcervo);
+    boolean existsByCodigoRevistaAndIdItemAcervoNot(String codigoLivro, int idItemAcervo);
 }
 
