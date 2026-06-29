@@ -30,7 +30,7 @@ public class Revista extends ItemAcervo {
 
     @Column(nullable = false)
     private boolean ativo = true;
-
+    
     public Revista() {
         super();
         this.setTipo("Revista");
