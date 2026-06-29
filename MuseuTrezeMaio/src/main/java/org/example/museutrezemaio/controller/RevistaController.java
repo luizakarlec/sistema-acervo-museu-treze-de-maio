@@ -46,6 +46,7 @@ public class RevistaController {
     @GetMapping("/revistaFormulario")
     public String exibirFormularioRevista(Model model) {
         Revista revista = new Revista();
+        revista.setEdicao(null);
         model.addAttribute("revista",revista);
         carregarListasFormulario(model, revista);
         return "revistaFormulario";

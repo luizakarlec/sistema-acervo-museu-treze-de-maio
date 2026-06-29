@@ -131,7 +131,7 @@
                                                th:if="${revista.subtitulo != null and !#strings.isEmpty(revista.subtitulo)}"
                                                th:text="${revista.subtitulo}"></small>
                                     </td>
-                                    <td th:text="${revista.edicao}"></td>
+                                    <td th:text="${revista.numero}"></td>
                                     <td th:text="${revista.volume}"></td>
                                     <td th:text="${revista.mes != null} ? |${revista.ano}/${#numbers.formatInteger(revista.mes, 2)}| : ${revista.ano}"></td>
                                     <td>

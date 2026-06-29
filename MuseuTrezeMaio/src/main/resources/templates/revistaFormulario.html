@@ -118,6 +118,7 @@
                     <form th:action="@{/revista/salvarRevista}" th:object="${revista}" method="post" enctype="multipart/form-data">
                         <input type="hidden" th:field="*{idItemAcervo}">
                         <input type="hidden" th:field="*{tipo}">
+                        <input type="hidden" th:field="*{edicao}">
 
                         <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
                             <p th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="mb-0"></p>
