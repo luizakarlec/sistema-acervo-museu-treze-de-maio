@@ -117,15 +117,13 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="edicao" class="form-label required">Número</label>
-                                <input type="text" class="form-control" id="edicao" th:field="*{edicao}" placeholder="Número ou Identificador">
-                                <div class="text-danger small" th:if="${#fields.hasErrors('edicao')}" th:errors="*{edicao}"></div>
+                                <label for="numero" class="form-label">Número</label>
+                                <input type="text" class="form-control" id="numero" th:field="*{numero}" placeholder="Número ou Identificador">
                             </div>
 
                             <div class="col-md-4">
                                 <label for="ISSN" class="form-label">ISSN</label>
                                 <input type="text" class="form-control" id="ISSN" th:field="*{ISSN}">
-                                <div class="text-danger small" th:if="${#fields.hasErrors('ISSN')}" th:errors="*{ISSN}"></div>
                             </div>
 
                             <div class="col-md-12">
@@ -198,6 +196,7 @@
                                 </div>
                             </div>
 
+
                             <div class="col-md-6">
                                 <label for="fileCapa" class="form-label">Upload da Capa</label>
                                 <input type="file" id="fileCapa" name="fileCapa" class="form-control" accept="image/*">
@@ -206,6 +205,48 @@
                                         <i class="bi bi-file-earmark-check me-1 fs-6"></i>Imagem de capa já cadastrada
                                     </small>
                                 </div>
+                            </div>
+
+                            <!-- Colaborador (multi-select) -->
+                            <div class="col-md-6">
+                                <label for="colaboradoresIds" class="form-label">Colaboradores</label>
+                                <div class="input-group align-items-start">
+                                    <select id="colaboradoresIds" name="colaboradoresIds" class="form-select" multiple size="5">
+                                        <option th:each="col : ${listaColaboradores}"
+                                                th:value="${col.idColaborador}"
+                                                th:text="${col.nome + ' ' + col.sobrenome + ' (' + col.tipo + ')'}"
+                                                th:selected="${selectedColaboradoresIds.contains(col.idColaborador)}">
+                                        </option>
+                                    </select>
+                                    <button type="button" class="btn text-white" style="background:#2C5B37" data-bs-toggle="modal" data-bs-target="#modalColaborador">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+
+                                </div>
+                                <small class="text-muted">
+                                    Segure Ctrl (ou <kbd>⌘</kbd>) para selecionar múltiplos ou clique em <b>+</b> para cadastrar um novo colaborador.
+                                </small>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="assuntosIds" class="form-label">Assuntos </label>
+                                <div class="input-group align-items-start">
+                                    <select id="assuntosIds" name="assuntosIds" class="form-select" multiple size="5">
+                                        <option
+                                                th:each="as : ${listaAssuntos}"
+                                                th:value="${as.idAssunto}"
+                                                th:text="${as.descricao}"
+                                                th:selected="${selectedAssuntosIds.contains(as.idAssunto)}">
+                                        </option>
+                                    </select>
+                                    <button
+                                            type="button" class="btn text-white" style="background:#2C5B37" data-bs-toggle="modal" data-bs-target="#modalAssunto">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                                <small class="text-muted">
+                                    Segure Ctrl (ou <kbd>⌘</kbd>) para selecionar múltiplos ou clique em <b>+</b> para cadastrar um novo assunto.
+                                </small>
                             </div>
 
                             <div class="col-12">
