@@ -90,7 +90,7 @@ Crie um banco de dados local e configure as credenciais no arquivo `src/main/res
 
 ## 👥 Desenvolvedores
 * Éric Martins da Silva - [@ericmds](https://github.com/ericmds)
-* Frazzon - [@Akumashii](https://github.com/Akumashii)
+* Diana Frazzon Rolim - [@dianafrazzon](https://github.com/dianafrazzon)
 * Luiza Lewandowski Karlec - [@luizakarlec](https://github.com/luizakarlec)
 * Vanessa Cezar do Nascimento - [@vanessacezarn](https://github.com/vanessacezarn)
 
